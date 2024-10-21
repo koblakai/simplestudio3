@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { config } from '../../config';
-import { Check } from 'lucide-react';
 
 interface Class {
   id: number;
@@ -19,7 +18,6 @@ const ClassSchedule: React.FC = () => {
   const classes = config.classes || [];
 
   const getClassStatus = (classItem: Class) => {
-    // This is a placeholder. In a real application, you'd need to track bookings.
     const bookedSpots = Math.floor(Math.random() * classItem.capacity);
     const remainingSpots = classItem.capacity - bookedSpots;
     if (remainingSpots === 0) {
