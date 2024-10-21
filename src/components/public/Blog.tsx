@@ -7,7 +7,7 @@ const Blog: React.FC = () => {
     return null;
   }
 
-  // Mock blog posts (in a real application, you would fetch these from your backend)
+  // Mock blog posts (replace with actual data in production)
   const blogPosts = [
     { id: 1, title: 'The Benefits of Daily Yoga Practice', excerpt: 'Discover how incorporating yoga into your daily routine can transform your physical and mental well-being...', date: '2024-03-10' },
     { id: 2, title: 'Mindfulness Meditation Techniques', excerpt: 'Learn simple yet effective mindfulness meditation techniques to reduce stress and increase focus...', date: '2024-03-05' },
