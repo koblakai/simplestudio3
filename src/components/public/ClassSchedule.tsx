@@ -2,22 +2,8 @@
 import React from 'react';
 import { config } from '../../config';
 
-interface Class {
-  id: number;
-  name: string;
-  instructor: string;
-  date: string;
-  time: string;
-  capacity: number;
-  room: string;
-  locationId: string;
-  description: string;
-}
-
 const ClassSchedule: React.FC = () => {
-  const classes: Class[] = config.classes || [];
-
-  const getClassStatus = (classItem: Class) => {
+  const getClassStatus = (classItem: any) => {
     const bookedSpots = Math.floor(Math.random() * classItem.capacity);
     const remainingSpots = classItem.capacity - bookedSpots;
     if (remainingSpots === 0) {
@@ -29,18 +15,18 @@ const ClassSchedule: React.FC = () => {
     }
   };
 
-  const filteredClasses = config.hasMultipleLocations
-    ? classes.filter(c => c.locationId === config.currentLocation?.id)
-    : classes;
+  const filteredClasses = config.hasMultipleLocations && config.currentLocation
+    ? config.classes.filter((c: any) => c.locationId === config.currentLocation.id)
+    : config.classes;
 
   return (
     <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <h2 className="text-3xl font-extrabold text-gray-900 mb-8">Class Schedule</h2>
-      {config.hasMultipleLocations && (
-        <p className="text-lg mb-4">Showing classes for: {config.currentLocation?.name}</p>
+      {config.hasMultipleLocations && config.currentLocation && (
+        <p className="text-lg mb-4">Showing classes for: {config.currentLocation.name}</p>
       )}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {filteredClasses.map((classItem) => {
+        {filteredClasses.map((classItem: any) => {
           const { status, color } = getClassStatus(classItem);
           return (
             <div key={classItem.id} className="bg-white shadow-md rounded-lg overflow-hidden">
