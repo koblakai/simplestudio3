@@ -7,7 +7,7 @@ const Shop: React.FC = () => {
     return null;
   }
 
-  // Mock shop items (in a real application, you would fetch these from your backend)
+  // Mock shop items (replace with actual data in production)
   const shopItems = [
     { id: 1, name: 'Premium Yoga Mat', price: 59.99, image: 'https://images.unsplash.com/photo-1592432678016-e910b452f9a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80' },
     { id: 2, name: 'Meditation Cushion', price: 39.99, image: 'https://images.unsplash.com/photo-1593811167562-9cef47bfc4a7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80' },
