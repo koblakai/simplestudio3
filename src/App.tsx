@@ -1,11 +1,14 @@
 
-import { BrowserRouter as Router } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import PublicLayout from './components/public/PublicLayout';
 
 function App() {
   return (
     <Router>
-      <PublicLayout />
+      <Routes>
+        <Route path="/*" element={<PublicLayout />} />
+      </Routes>
     </Router>
   );
 }
