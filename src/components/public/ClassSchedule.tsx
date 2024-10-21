@@ -3,12 +3,7 @@ import React from 'react';
 import { config } from '../../config';
 
 const ClassSchedule: React.FC = () => {
-  // Mock class data (replace with actual data in production)
-  const classes = [
-    { id: 1, name: 'Vinyasa Flow', instructor: 'Jane Doe', date: '2024-03-15', time: '09:00', capacity: 20, booked: 15 },
-    { id: 2, name: 'Hatha Yoga', instructor: 'John Smith', date: '2024-03-15', time: '11:00', capacity: 15, booked: 10 },
-    { id: 3, name: 'Yin Yoga', instructor: 'Emily Brown', date: '2024-03-15', time: '14:00', capacity: 25, booked: 20 },
-  ];
+  const classes = config.classes || [];
 
   return (
     <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
@@ -23,7 +18,7 @@ const ClassSchedule: React.FC = () => {
                 {new Date(classItem.date).toLocaleDateString()} at {classItem.time}
               </p>
               <p className="text-gray-600 mb-4">
-                {classItem.booked} / {classItem.capacity} spots filled
+                Capacity: {classItem.capacity}
               </p>
               <button className="w-full bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 transition duration-200">
                 Book Now
