@@ -15,7 +15,7 @@ interface Class {
 }
 
 const ClassSchedule: React.FC = () => {
-  const classes = config.classes || [];
+  const classes: Class[] = config.classes || [];
 
   const getClassStatus = (classItem: Class) => {
     const bookedSpots = Math.floor(Math.random() * classItem.capacity);
