@@ -8,7 +8,7 @@ const Home: React.FC = () => {
       <div className="absolute inset-0">
         <img
           className="w-full h-full object-cover"
-          src={config.landingPageImage}
+          src="https://images.unsplash.com/photo-1545205597-3d9d02c29597?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
           alt="Yoga studio"
         />
         <div className="absolute inset-0 bg-gray-500 mix-blend-multiply" aria-hidden="true" />
