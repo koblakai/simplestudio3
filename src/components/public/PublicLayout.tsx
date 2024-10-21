@@ -8,6 +8,11 @@ import Blog from './Blog';
 import Shop from './Shop';
 import { config } from '../../config';
 
+interface SocialMediaItem {
+  platform: string;
+  url: string;
+}
+
 const PublicLayout: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col">
@@ -66,7 +71,7 @@ const PublicLayout: React.FC = () => {
         <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
           <div className="mt-8 border-t border-gray-200 pt-8 md:flex md:items-center md:justify-between">
             <div className="flex space-x-6 md:order-2">
-              {config.socialMedia.map((item) => (
+              {(config.socialMedia as SocialMediaItem[]).map((item) => (
                 <a key={item.platform} href={item.url} className="text-gray-400 hover:text-gray-500">
                   <span className="sr-only">{item.platform}</span>
                   {/* Add social media icons here */}
