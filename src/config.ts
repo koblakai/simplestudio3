@@ -2,7 +2,7 @@
 export const config = {
   studioName: "",
   locations: [],
-  pricing: [{"price":80,"description":["Access to all classes "],"name":"Monthly Unlimited"},{"name":"Monthly Premium","price":120,"description":[]},{"price":999,"description":["Access to all classes for one year "],"name":"Yearly Unlimited"},{"description":["Access to All Classes","Mat Rental","Access to 2 Specialized Workshops"],"price":1199,"name":"Yearly Premium"},{"name":"Walk-in ","price":30,"description":["Access to one class"],"durationMonths":1,"paymentLink":""},{"name":"Walk-in premium","price":0,"description":["Access to one class","Yoga Mat Rental"],"durationMonths":1,"paymentLink":""}],
+  pricing: [{"price":80,"description":["Access to all class for one month"],"name":"Monthly Unlimited"},{"name":"Monthly Premium","price":120,"description":["Access to all classes for one month","Yoga mat rental"]},{"price":999,"description":["Access to all classes for one year "],"name":"Yearly Unlimited"},{"description":["Access to All Classes","Mat Rental","Access to 2 Specialized Workshops"],"price":1199,"name":"Yearly Premium"},{"name":"Walk-in ","price":30,"description":["Access to one class"],"durationMonths":1,"paymentLink":""},{"name":"Walk-in premium","price":0,"description":["Access to one class","Yoga Mat Rental"],"durationMonths":1,"paymentLink":""}],
   socialMedia: [],
   enableBlog: false,
   enableShop: false,
