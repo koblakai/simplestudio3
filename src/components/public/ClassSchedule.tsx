@@ -1,19 +1,19 @@
 
 import React from 'react';
-import { config } from '../../config';
+import classesData from '../../data/classes.json';
 
 const ClassSchedule: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <h2 className="text-3xl font-extrabold text-gray-900 mb-8">Class Schedule</h2>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {config.classes.map((classItem) => (
+        {classesData.classes.map((classItem) => (
           <div key={classItem.id} className="bg-white shadow-md rounded-lg overflow-hidden">
             <div className="p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">{classItem.name}</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">{classItem.title}</h3>
               <p className="text-gray-600 mb-2">Instructor: {classItem.instructor}</p>
               <p className="text-gray-600 mb-2">
-                {new Date(classItem.date).toLocaleDateString()} at {classItem.time}
+                {new Date(classItem.start).toLocaleDateString()} at {new Date(classItem.start).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </p>
               <p className="text-gray-600 mb-4">
                 {classItem.capacity} spots available
