@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { config } from '../../config';
+import pricingData from '../../data/pricing.json';
 import { Check } from 'lucide-react';
 
 const Pricing: React.FC = () => {
@@ -17,7 +17,7 @@ const Pricing: React.FC = () => {
         </div>
 
         <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:grid-cols-3">
-          {config.pricing.map((plan, index) => (
+          {pricingData.pricing.map((plan, index) => (
             <div key={index} className="bg-white border border-gray-200 rounded-lg shadow-sm divide-y divide-gray-200">
               <div className="p-6">
                 <h3 className="text-lg font-medium text-gray-900">{plan.name}</h3>
@@ -40,7 +40,7 @@ const Pricing: React.FC = () => {
                   What's included
                 </h4>
                 <ul className="mt-6 space-y-4">
-                  {plan.description.map((desc, descIndex) => (
+                  {plan.features.map((desc, descIndex) => (
                     <li key={descIndex} className="flex space-x-3">
                       <Check className="flex-shrink-0 h-5 w-5 text-green-500" />
                       <span className="text-sm text-gray-500">{desc}</span>
