@@ -14,7 +14,6 @@
     "date-fns": "^4.1.0",
     "@octokit/rest": "^20.0.1",
     "axios": "^1.5.0",
-    "date-fns": "^2.31.3",
     "firebase": "^9.22.0",
     "lucide-react": "^0.344.0",
     "react": "^18.2.0",
