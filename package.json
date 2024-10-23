@@ -11,14 +11,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@octokit/rest": "^20.0.1",
+    "axios": "^1.5.0",
+    "date-fns": "^2.31.3",
+    "firebase": "^9.22.0",
+    "lucide-react": "^0.344.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.3",
-    "lucide-react": "^0.344.0"
+    "react-router-dom": "^6.22.3"
   },
   "devDependencies": {
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
+    "@types/react-router-dom": "^5.3.3",
     "@vitejs/plugin-react": "^4.0.4",
     "autoprefixer": "^10.4.14",
     "eslint": "^8.46.0",
