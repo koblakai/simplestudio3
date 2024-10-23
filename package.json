@@ -11,7 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "date-fns": "^2.31.0",
+    "date-fns": "^4.1.0",
     "@octokit/rest": "^20.0.1",
     "axios": "^1.5.0",
     "date-fns": "^2.31.3",
