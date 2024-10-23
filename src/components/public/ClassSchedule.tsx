@@ -1,7 +1,16 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { format, startOfWeek, endOfWeek, eachDayOfInterval, isSameDay } from 'date-fns';
 import { Clock, User, MapPin } from 'lucide-react';
+
+interface ClassItem {
+  id: string;
+  title: string;
+  instructor: string;
+  start: string;
+  room: string;
+  capacity: number;
+}
 
 const ClassSchedule: React.FC = () => {
   const now = new Date();
@@ -9,7 +18,7 @@ const ClassSchedule: React.FC = () => {
   const weekEnd = endOfWeek(now, { weekStartsOn: 1 });
   const weekDays = eachDayOfInterval({ start: weekStart, end: weekEnd });
 
-  const classes = [
+  const classes: ClassItem[] = [
     {
       id: '1',
       title: 'Hatha',
@@ -18,15 +27,35 @@ const ClassSchedule: React.FC = () => {
       room: 'Yoga Studio 2',
       capacity: 30
     },
-    // Add more classes as needed
+    {
+      id: '2',
+      title: 'Slow Flow Vinyasa',
+      instructor: 'Lindsey Pierce',
+      start: '2024-10-24T11:00:00',
+      room: 'Yoga Studio 2',
+      capacity: 30
+    },
+    {
+      id: '3',
+      title: 'Slow Flow Vinyasa',
+      instructor: 'Lindsey Pierce',
+      start: '2024-10-25T10:00:00',
+      room: 'Yoga Studio 2',
+      capacity: 30
+    }
   ];
 
-  const getClassesForDay = (day: Date) => {
+  const getClassesForDay = (day: Date): ClassItem[] => {
     return classes.filter(classItem => 
       isSameDay(new Date(classItem.start), day)
     ).sort((a, b) => 
       new Date(a.start).getTime() - new Date(b.start).getTime()
     );
+  };
+
+  const handleBooking = (classId: string) => {
+    console.log('Booking class:', classId);
+    // Implement booking logic here
   };
 
   return (
@@ -63,6 +92,7 @@ const ClassSchedule: React.FC = () => {
                       </div>
                     </div>
                     <button 
+                      onClick={() => handleBooking(classItem.id)}
                       className="mt-3 w-full bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 transition duration-200 text-sm"
                     >
                       Book Now
