@@ -1,23 +1,23 @@
 {
   "pricing": [
     {
-      "price": 80,
       "name": "Monthly Unlimited",
       "description": [
         "Access to all class for one month"
       ],
+      "price": 80,
       "features": [
         "Access to all class for one month"
       ],
       "durationMonths": 1
     },
     {
-      "name": "Monthly Premium",
+      "description": [
+        "Access to all classes for one month",
+        "Yoga mat rental"
+      ],
       "price": 120,
-      "description": [
-        "Access to all classes for one month",
-        "Yoga mat rental"
-      ],
+      "name": "Monthly Premium",
       "features": [
         "Access to all classes for one month",
         "Yoga mat rental"
@@ -28,21 +28,21 @@
       "description": [
         "Access to all classes for one year "
       ],
-      "name": "Yearly Unlimited",
       "price": 999,
+      "name": "Yearly Unlimited",
       "features": [
         "Access to all classes for one year "
       ],
       "durationMonths": 1
     },
     {
+      "price": 1199,
+      "name": "Yearly Premium",
       "description": [
         "Access to All Classes",
         "Mat Rental",
         "Access to 2 Specialized Workshops"
       ],
-      "name": "Yearly Premium",
-      "price": 1199,
       "features": [
         "Access to All Classes",
         "Mat Rental",
@@ -51,25 +51,25 @@
       "durationMonths": 1
     },
     {
+      "durationMonths": 1,
+      "price": 30,
+      "paymentLink": "",
+      "name": "Walk-in ",
       "description": [
         "Access to one class"
       ],
-      "name": "Walk-in ",
-      "paymentLink": "",
-      "durationMonths": 1,
-      "price": 30,
       "features": [
         "Access to one class"
       ]
     },
     {
-      "paymentLink": "",
+      "name": "Walk-in premium",
       "price": 50,
       "description": [
         "Access to one class",
         "Yoga Mat Rental"
       ],
-      "name": "Walk-in premium",
+      "paymentLink": "",
       "durationMonths": 1,
       "features": [
         "Access to one class",
@@ -77,5 +77,5 @@
       ]
     }
   ],
-  "lastUpdated": "2024-10-23T18:04:59.596Z"
+  "lastUpdated": "2024-10-23T19:57:25.878Z"
 }
