@@ -3,7 +3,9 @@ import React, { useState } from 'react';
 import { config } from '../../config';
 import { Check, X } from 'lucide-react';
 import { db } from '../../firebase/config';
-import { collection, addDoc, Firestore } from 'firebase/firestore';
+import { collection, addDoc } from 'firebase/firestore'
+
+
 
 interface PricingPlan {
   id: string;
