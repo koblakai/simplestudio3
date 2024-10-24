@@ -1,4 +1,3 @@
-
 import { initializeApp } from 'firebase/app';
 import { getFirestore, enableIndexedDbPersistence } from 'firebase/firestore';
 
@@ -23,7 +22,7 @@ try {
     if (err.code === 'failed-precondition') {
       console.warn('Multiple tabs open, persistence enabled in another tab');
     } else if (err.code === 'unimplemented') {
-      console.warn('Browser doesn't support persistence');
+      console.warn('Browser does not support persistence');
     }
   });
 } catch (error) {
