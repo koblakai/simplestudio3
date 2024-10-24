@@ -26,19 +26,19 @@ const pricingWithIds = [
     ]
   },
   {
-    "price": 120,
+    "name": "Monthly Premium",
     "description": [
       "Access to all classes for one month",
       "Yoga mat rental"
     ],
-    "name": "Monthly Premium"
+    "price": 120
   },
   {
+    "name": "Yearly Unlimited",
     "price": 999,
     "description": [
       "Access to all classes for one year "
-    ],
-    "name": "Yearly Unlimited"
+    ]
   },
   {
     "name": "Yearly Premium",
@@ -50,23 +50,23 @@ const pricingWithIds = [
     "price": 1199
   },
   {
-    "paymentLink": "",
-    "durationMonths": 1,
     "price": 30,
-    "name": "Walk-in ",
+    "durationMonths": 1,
+    "paymentLink": "",
     "description": [
       "Access to one class"
-    ]
+    ],
+    "name": "Walk-in "
   },
   {
-    "paymentLink": "",
+    "durationMonths": 1,
+    "name": "Walk-in premium",
     "description": [
       "Access to one class",
       "Yoga Mat Rental"
     ],
-    "price": 50,
-    "durationMonths": 1,
-    "name": "Walk-in premium"
+    "paymentLink": "",
+    "price": 50
   }
 ].map((plan: any, index: number) => ({
   id: plan.id || `plan-${index + 1}`,
