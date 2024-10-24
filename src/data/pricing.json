@@ -1,23 +1,23 @@
 {
   "pricing": [
     {
-      "name": "Monthly Unlimited",
+      "price": 80,
       "description": [
         "Access to all class for one month"
       ],
-      "price": 80,
+      "name": "Monthly Unlimited",
       "features": [
         "Access to all class for one month"
       ],
       "durationMonths": 1
     },
     {
+      "price": 120,
       "description": [
         "Access to all classes for one month",
         "Yoga mat rental"
       ],
       "name": "Monthly Premium",
-      "price": 120,
       "features": [
         "Access to all classes for one month",
         "Yoga mat rental"
@@ -25,8 +25,8 @@
       "durationMonths": 1
     },
     {
-      "price": 999,
       "name": "Yearly Unlimited",
+      "price": 999,
       "description": [
         "Access to all classes for one year "
       ],
@@ -36,13 +36,13 @@
       "durationMonths": 1
     },
     {
+      "price": 1199,
       "name": "Yearly Premium",
       "description": [
         "Access to All Classes",
         "Mat Rental",
         "Access to 2 Specialized Workshops"
       ],
-      "price": 1199,
       "features": [
         "Access to All Classes",
         "Mat Rental",
@@ -51,31 +51,31 @@
       "durationMonths": 1
     },
     {
-      "name": "Walk-in ",
-      "paymentLink": "",
-      "durationMonths": 1,
       "description": [
         "Access to one class"
       ],
+      "paymentLink": "",
+      "durationMonths": 1,
+      "name": "Walk-in ",
       "price": 30,
       "features": [
         "Access to one class"
       ]
     },
     {
-      "price": 50,
-      "name": "Walk-in premium",
-      "paymentLink": "",
-      "durationMonths": 1,
       "description": [
         "Access to one class",
         "Yoga Mat Rental"
       ],
+      "name": "Walk-in premium",
+      "paymentLink": "",
+      "durationMonths": 1,
+      "price": 50,
       "features": [
         "Access to one class",
         "Yoga Mat Rental"
       ]
     }
   ],
-  "lastUpdated": "2024-10-24T01:58:12.022Z"
+  "lastUpdated": "2024-10-24T02:15:29.025Z"
 }
