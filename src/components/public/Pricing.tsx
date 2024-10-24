@@ -24,8 +24,9 @@ const SignupModal: React.FC<SignupModalProps> = ({ plan, onClose }) => {
     setError(null);
 
     try {
+      // Create membership directly without payment
       const expirationDate = new Date();
-      expirationDate.setMonth(expirationDate.getMonth() + plan.durationMonths);
+      expirationDate.setMonth(expirationDate.getMonth() + (plan.durationMonths || 1));
 
       await addDoc(collection(db, 'members'), {
         firstName,
