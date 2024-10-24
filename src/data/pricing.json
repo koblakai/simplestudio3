@@ -1,39 +1,26 @@
 {
   "pricing": [
     {
-      "price": 80,
       "name": "Monthly Unlimited",
       "description": [
         "Access to all class for one month"
       ],
-      "features": [
-        "Access to all class for one month"
-      ],
-      "durationMonths": 1
+      "price": 80
     },
     {
-      "name": "Monthly Premium",
       "price": 120,
+      "name": "Monthly Premium",
       "description": [
         "Access to all classes for one month",
         "Yoga mat rental"
-      ],
-      "features": [
-        "Access to all classes for one month",
-        "Yoga mat rental"
-      ],
-      "durationMonths": 1
+      ]
     },
     {
-      "name": "Yearly Unlimited",
       "price": 999,
       "description": [
         "Access to all classes for one year "
       ],
-      "features": [
-        "Access to all classes for one year "
-      ],
-      "durationMonths": 1
+      "name": "Yearly Unlimited"
     },
     {
       "name": "Yearly Premium",
@@ -42,40 +29,27 @@
         "Mat Rental",
         "Access to 2 Specialized Workshops"
       ],
-      "price": 1199,
-      "features": [
-        "Access to All Classes",
-        "Mat Rental",
-        "Access to 2 Specialized Workshops"
-      ],
-      "durationMonths": 1
+      "price": 1199
     },
     {
-      "paymentLink": "",
       "name": "Walk-in ",
-      "description": [
-        "Access to one class"
-      ],
+      "paymentLink": "",
       "durationMonths": 1,
       "price": 30,
-      "features": [
+      "description": [
         "Access to one class"
       ]
     },
     {
-      "durationMonths": 1,
-      "price": 50,
       "paymentLink": "",
       "description": [
         "Access to one class",
         "Yoga Mat Rental"
       ],
-      "name": "Walk-in premium",
-      "features": [
-        "Access to one class",
-        "Yoga Mat Rental"
-      ]
+      "price": 50,
+      "durationMonths": 1,
+      "name": "Walk-in premium"
     }
   ],
-  "lastUpdated": "2024-10-24T19:49:45.552Z"
+  "lastUpdated": "2024-10-24T20:07:28.025Z"
 }
