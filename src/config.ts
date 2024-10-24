@@ -28,12 +28,12 @@ const pricingWithIds = [
     ]
   },
   {
-    "price": 120,
-    "name": "Monthly Premium",
     "description": [
       "Access to all classes for one month",
       "Yoga mat rental"
-    ]
+    ],
+    "price": 120,
+    "name": "Monthly Premium"
   },
   {
     "price": 999,
@@ -44,27 +44,27 @@ const pricingWithIds = [
   },
   {
     "name": "Yearly Premium",
-    "price": 1199,
     "description": [
       "Access to All Classes",
       "Mat Rental",
       "Access to 2 Specialized Workshops"
-    ]
+    ],
+    "price": 1199
   },
   {
-    "name": "Walk-in ",
-    "paymentLink": "",
-    "price": 30,
     "description": [
       "Access to one class"
     ],
-    "durationMonths": 1
+    "durationMonths": 1,
+    "name": "Walk-in ",
+    "price": 30,
+    "paymentLink": ""
   },
   {
-    "durationMonths": 1,
     "price": 50,
     "name": "Walk-in premium",
     "paymentLink": "",
+    "durationMonths": 1,
     "description": [
       "Access to one class",
       "Yoga Mat Rental"
