@@ -3,15 +3,18 @@ import React, { useState } from 'react';
 import { config } from '../../config';
 import { Check, X } from 'lucide-react';
 import { db } from '../../firebase/config';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, Firestore } from 'firebase/firestore';
+
+interface PricingPlan {
+  id: string;
+  name: string;
+  price: number;
+  description: string[];
+  durationMonths: number;
+}
 
 interface SignupModalProps {
-  plan: {
-    name: string;
-    price: number;
-    durationMonths: number;
-    description: string[];
-  };
+  plan: PricingPlan;
   onClose: () => void;
 }
 
@@ -54,6 +57,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ plan, onClose }) => {
     } catch (err: any) {
       console.error('Signup error:', err);
       setError(err.message || 'Failed to process signup. Please try again.');
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -148,7 +152,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ plan, onClose }) => {
 };
 
 const Pricing: React.FC = () => {
-  const [selectedPlan, setSelectedPlan] = useState(null);
+  const [selectedPlan, setSelectedPlan] = useState<PricingPlan | null>(null);
 
   return (
     <div className="bg-gray-100 py-12">
