@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, enableIndexedDbPersistence } from 'firebase/firestore';
+import { getFirestore, enableMultiTabIndexedDbPersistence } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -16,9 +16,9 @@ let db;
 try {
   app = initializeApp(firebaseConfig);
   db = getFirestore(app);
-  
+
   // Enable offline persistence with multi-tab support
-  enableIndexedDbPersistence(db, { synchronizeTabs: true }).catch((err) => {
+  enableMultiTabIndexedDbPersistence(db).catch((err) => {
     if (err.code === 'failed-precondition') {
       console.warn('Multiple tabs open, persistence enabled in another tab');
     } else if (err.code === 'unimplemented') {
