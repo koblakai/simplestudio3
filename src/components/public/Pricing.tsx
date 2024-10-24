@@ -1,59 +1,153 @@
 import React, { useState } from 'react';
-import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import { config } from '../../config';
+import { Check, X } from 'lucide-react';
 import { db } from '../../firebase/config';
-import { Check } from 'lucide-react';
+import { collection, addDoc } from 'firebase/firestore';
 
-const Pricing: React.FC = () => {
-  const [selectedPlan, setSelectedPlan] = useState<PricingPlan | null>(null);
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-  });
+interface PricingPlan {
+  id: string;
+  name: string;
+  price: number;
+  description: string[];
+  durationMonths: number;
+}
+
+interface SignupModalProps {
+  plan: PricingPlan;
+  onClose: () => void;
+}
+
+const SignupModal: React.FC<SignupModalProps> = ({ plan, onClose }) => {
+  const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedPlan) return;
-
     setIsSubmitting(true);
     setError(null);
 
     try {
-      const membersRef = collection(db, 'members');
-      const q = query(membersRef, where('email', '==', formData.email));
-      const querySnapshot = await getDocs(q);
-
-      if (!querySnapshot.empty) {
-        const memberDoc = querySnapshot.docs[0];
-        const memberData = memberDoc.data();
-        
-        if (new Date(memberData.expirationDate) > new Date()) {
-          throw new Error('You already have an active membership.');
-        }
-      }
-
       const expirationDate = new Date();
-      expirationDate.setMonth(expirationDate.getMonth() + selectedPlan.durationMonths);
+      expirationDate.setMonth(expirationDate.getMonth() + (plan.durationMonths || 1));
 
       await addDoc(collection(db, 'members'), {
-        ...formData,
-        membershipType: selectedPlan.name,
-        membershipPrice: selectedPlan.price,
+        firstName,
+        lastName,
+        email,
+        membershipType: plan.name,
+        membershipPrice: plan.price,
         signUpDate: new Date().toISOString(),
         expirationDate: expirationDate.toISOString(),
         active: true,
+        createdAt: new Date().toISOString(),
+        durationMonths: plan.durationMonths,
+        isPublicSignup: true
       });
 
       setSuccess(true);
     } catch (err: any) {
-      setError(err.message);
+      console.error('Signup error:', err);
+      setError('There was an error processing your signup. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 max-w-md w-full">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold">Sign up for {plan.name}</h3>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+            <X size={20} />
+          </button>
+        </div>
+
+        {!success ? (
+          <form onSubmit={handleSubmit}>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">First Name</label>
+                <input
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Last Name</label>
+                <input
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Email</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
+                  required
+                />
+              </div>
+
+              <div className="mt-4">
+                <p className="font-medium">Plan Details:</p>
+                <p>{plan.name} - \${plan.price}/month</p>
+                <p>{plan.durationMonths} month{plan.durationMonths > 1 ? 's' : ''}</p>
+              </div>
+
+              {error && (
+                <div className="text-red-600 text-sm bg-red-50 p-2 rounded">{error}</div>
+              )}
+
+              <div className="flex space-x-3">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="flex-1 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="flex-1 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400"
+                >
+                  {isSubmitting ? 'Processing...' : 'Sign Up'}
+                </button>
+              </div>
+            </div>
+          </form>
+        ) : (
+          <div>
+            <p className="text-green-600 mb-4">Welcome to our studio! Your membership has been activated.</p>
+            <p className="text-sm text-gray-600 mb-4">You can now book classes using your email address.</p>
+            <button
+              onClick={onClose}
+              className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Close
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const Pricing: React.FC = () => {
+  const [selectedPlan, setSelectedPlan] = useState<PricingPlan | null>(null);
 
   return (
     <div className="bg-gray-100 py-12">
@@ -68,16 +162,18 @@ const Pricing: React.FC = () => {
         </div>
 
         <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {pricing.map((plan) => (
+          {config.pricing.map((plan) => (
             <div
               key={plan.id}
               className="bg-white border border-gray-200 rounded-lg shadow-sm divide-y divide-gray-200"
             >
               <div className="p-6">
-                <h3 className="text-lg font-medium text-gray-900">{plan.name}</h3>
+                <h3 className="text-lg font-medium text-gray-900">
+                  {plan.name}
+                </h3>
                 <p className="mt-8">
                   <span className="text-4xl font-extrabold text-gray-900">
-                    ${plan.price}
+                    \${plan.price}
                   </span>
                   <span className="text-base font-medium text-gray-500">
                     /month
@@ -95,10 +191,10 @@ const Pricing: React.FC = () => {
                   What's included
                 </h4>
                 <ul className="mt-6 space-y-4">
-                  {plan.description.map((feature, index) => (
-                    <li key={index} className="flex space-x-3">
+                  {plan.description.map((desc, descIndex) => (
+                    <li key={descIndex} className="flex space-x-3">
                       <Check className="flex-shrink-0 h-5 w-5 text-green-500" />
-                      <span className="text-sm text-gray-500">{feature}</span>
+                      <span className="text-sm text-gray-500">{desc}</span>
                     </li>
                   ))}
                 </ul>
@@ -109,84 +205,10 @@ const Pricing: React.FC = () => {
       </div>
 
       {selectedPlan && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <h3 className="text-lg font-semibold mb-4">Sign up for {selectedPlan.name}</h3>
-            {!success ? (
-              <form onSubmit={handleSubmit}>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      First Name
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.firstName}
-                      onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                      className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Last Name
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.lastName}
-                      onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                      className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
-                      required
-                    />
-                  </div>
-                  {error && (
-                    <div className="text-red-600 text-sm">{error}</div>
-                  )}
-                  <div className="flex space-x-3">
-                    <button
-                      type="button"
-                      onClick={() => setSelectedPlan(null)}
-                      className="flex-1 py-2 px-4 border border-gray-300 rounded-md"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="flex-1 py-2 px-4 bg-indigo-600 text-white rounded-md"
-                    >
-                      {isSubmitting ? 'Processing...' : 'Sign Up'}
-                    </button>
-                  </div>
-                </div>
-              </form>
-            ) : (
-              <div>
-                <p className="text-green-600 mb-4">
-                  Welcome to our studio! Your membership has been activated.
-                </p>
-                <button
-                  onClick={() => setSelectedPlan(null)}
-                  className="w-full py-2 px-4 bg-indigo-600 text-white rounded-md"
-                >
-                  Close
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
+        <SignupModal
+          plan={selectedPlan}
+          onClose={() => setSelectedPlan(null)}
+        />
       )}
     </div>
   );
