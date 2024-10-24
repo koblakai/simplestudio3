@@ -1,6 +1,6 @@
 
 import { initializeApp } from 'firebase/app';
-import { getFirestore, enableIndexedDbPersistence } from 'firebase/firestore';
+import { getFirestore, Firestore, enableIndexedDbPersistence } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -13,7 +13,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 let app;
-let db;
+let db: Firestore;
 
 try {
   app = initializeApp(firebaseConfig);
@@ -35,6 +35,7 @@ try {
   console.log('Firebase initialized successfully');
 } catch (error) {
   console.error('Error initializing Firebase:', error);
+  throw error;
 }
 
 export { db };
