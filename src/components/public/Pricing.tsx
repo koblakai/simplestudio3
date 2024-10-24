@@ -1,57 +1,17 @@
 
 import React from 'react';
+import { config } from '../../config';
 import { Check } from 'lucide-react';
 
 interface PricingPlan {
   id: string;
   name: string;
   price: number;
-  features: string[];
+  description: string[];
   durationMonths: number;
 }
 
 const Pricing: React.FC = () => {
-  const pricingData = {
-    pricing: [
-      {
-        id: 'basic',
-        name: 'Basic',
-        price: 99,
-        durationMonths: 1,
-        features: [
-          'Unlimited classes',
-          'Access to all locations',
-          'Basic workshop access'
-        ]
-      },
-      {
-        id: 'premium',
-        name: 'Premium',
-        price: 149,
-        durationMonths: 1,
-        features: [
-          'Unlimited classes',
-          'Access to all locations',
-          'Premium workshop access',
-          'Personal training session'
-        ]
-      },
-      {
-        id: 'annual',
-        name: 'Annual',
-        price: 999,
-        durationMonths: 12,
-        features: [
-          'Unlimited classes',
-          'Access to all locations',
-          'All workshop access',
-          'Monthly personal training',
-          'Guest passes'
-        ]
-      }
-    ] as PricingPlan[]
-  };
-
   return (
     <div className="bg-gray-100 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -65,12 +25,12 @@ const Pricing: React.FC = () => {
         </div>
 
         <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:grid-cols-3">
-          {pricingData.pricing.map((plan) => (
+          {config.pricing.map((plan) => (
             <div key={plan.id} className="bg-white border border-gray-200 rounded-lg shadow-sm divide-y divide-gray-200">
               <div className="p-6">
                 <h3 className="text-lg font-medium text-gray-900">{plan.name}</h3>
                 <p className="mt-8">
-                  <span className="text-4xl font-extrabold text-gray-900">\${plan.price}</span>
+                  <span className="text-4xl font-extrabold text-gray-900">${plan.price}</span>
                   <span className="text-base font-medium text-gray-500">/month</span>
                 </p>
                 <a
@@ -85,7 +45,7 @@ const Pricing: React.FC = () => {
                   What's included
                 </h4>
                 <ul className="mt-6 space-y-4">
-                  {plan.features.map((feature, index) => (
+                  {plan.description.map((feature, index) => (
                     <li key={index} className="flex space-x-3">
                       <Check className="flex-shrink-0 h-5 w-5 text-green-500" />
                       <span className="text-sm text-gray-500">{feature}</span>
