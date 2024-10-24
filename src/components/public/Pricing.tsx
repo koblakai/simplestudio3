@@ -5,13 +5,16 @@ import { Check, X } from 'lucide-react';
 import { db } from '../../firebase/config';
 import { collection, addDoc } from 'firebase/firestore';
 
+interface PricingPlan {
+  id: string;
+  name: string;
+  price: number;
+  description: string[];
+  durationMonths: number;
+}
+
 interface SignupModalProps {
-  plan: {
-    name: string;
-    price: number;
-    durationMonths: number;
-    description: string[];
-  };
+  plan: PricingPlan;
   onClose: () => void;
 }
 
@@ -30,7 +33,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ plan, onClose }) => {
 
     try {
       const expirationDate = new Date();
-      expirationDate.setMonth(expirationDate.getMonth() + (plan.durationMonths || 1));
+      expirationDate.setMonth(expirationDate.getMonth() + plan.durationMonths);
 
       // Create member document
       await addDoc(collection(db, 'members'), {
@@ -40,8 +43,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ plan, onClose }) => {
         membershipType: plan.name,
         signUpDate: new Date().toISOString(),
         expirationDate: expirationDate.toISOString(),
-        active: true,
-        createdAt: new Date().toISOString(),
+        active: true
       });
 
       setSuccess(true);
@@ -142,7 +144,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ plan, onClose }) => {
 };
 
 const Pricing: React.FC = () => {
-  const [selectedPlan, setSelectedPlan] = useState(null);
+  const [selectedPlan, setSelectedPlan] = useState<PricingPlan | null>(null);
 
   return (
     <div className="bg-gray-100 py-12">
@@ -157,9 +159,9 @@ const Pricing: React.FC = () => {
         </div>
 
         <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {config.pricing.map((plan, index) => (
+          {config.pricing.map((plan) => (
             <div
-              key={index}
+              key={plan.id}
               className="bg-white border border-gray-200 rounded-lg shadow-sm divide-y divide-gray-200"
             >
               <div className="p-6">
