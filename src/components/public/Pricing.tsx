@@ -1,12 +1,17 @@
 
 import React, { useState } from 'react';
-import { config, PricingPlan } from '../../config';
+import { config } from '../../config';
 import { Check, X } from 'lucide-react';
 import { db } from '../../firebase/config';
 import { collection, addDoc } from 'firebase/firestore';
 
 interface SignupModalProps {
-  plan: PricingPlan;
+  plan: {
+    name: string;
+    price: number;
+    durationMonths: number;
+    description: string[];
+  };
   onClose: () => void;
 }
 
@@ -23,22 +28,12 @@ const SignupModal: React.FC<SignupModalProps> = ({ plan, onClose }) => {
     setIsSubmitting(true);
     setError(null);
 
-    if (!db) {
-      setError('Unable to connect to the database. Please try again later.');
-      setIsSubmitting(false);
-      return;
-    }
-
     try {
-      const membersRef = collection(db, 'members');
-      if (!membersRef) {
-        throw new Error('Database collection not accessible');
-      }
-
       const expirationDate = new Date();
       expirationDate.setMonth(expirationDate.getMonth() + (plan.durationMonths || 1));
 
-      await addDoc(membersRef, {
+      // Create member document
+      await addDoc(collection(db, 'members'), {
         firstName,
         lastName,
         email,
@@ -47,9 +42,6 @@ const SignupModal: React.FC<SignupModalProps> = ({ plan, onClose }) => {
         expirationDate: expirationDate.toISOString(),
         active: true,
         createdAt: new Date().toISOString(),
-      }).catch(err => {
-        console.error('Error adding document:', err);
-        throw new Error('Failed to create membership. Please try again.');
       });
 
       setSuccess(true);
@@ -150,7 +142,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ plan, onClose }) => {
 };
 
 const Pricing: React.FC = () => {
-  const [selectedPlan, setSelectedPlan] = useState<PricingPlan | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState(null);
 
   return (
     <div className="bg-gray-100 py-12">
@@ -165,7 +157,7 @@ const Pricing: React.FC = () => {
         </div>
 
         <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {config.pricing.map((plan: PricingPlan, index: number) => (
+          {config.pricing.map((plan, index) => (
             <div
               key={index}
               className="bg-white border border-gray-200 rounded-lg shadow-sm divide-y divide-gray-200"
@@ -194,7 +186,7 @@ const Pricing: React.FC = () => {
                   What's included
                 </h4>
                 <ul className="mt-6 space-y-4">
-                  {plan.description.map((desc: string, descIndex: number) => (
+                  {plan.description.map((desc, descIndex) => (
                     <li key={descIndex} className="flex space-x-3">
                       <Check className="flex-shrink-0 h-5 w-5 text-green-500" />
                       <span className="text-sm text-gray-500">{desc}</span>
