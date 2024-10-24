@@ -3,14 +3,6 @@ import React from 'react';
 import { config } from '../../config';
 import { Check } from 'lucide-react';
 
-interface PricingPlan {
-  id: string;
-  name: string;
-  price: number;
-  description: string[];
-  durationMonths: number;
-}
-
 const Pricing: React.FC = () => {
   return (
     <div className="bg-gray-100 py-12">
