@@ -1,46 +1,10 @@
 
 import React from 'react';
 import { Check } from 'lucide-react';
+import pricingData from '../../data/pricing.json';
 
 const Pricing: React.FC = () => {
-  const plans = [
-    {
-      id: '1',
-      name: 'Basic',
-      price: 99,
-      durationMonths: 1,
-      features: [
-        'Unlimited classes',
-        'Access to all locations',
-        'Basic workshop access'
-      ]
-    },
-    {
-      id: '2',
-      name: 'Premium',
-      price: 149,
-      durationMonths: 1,
-      features: [
-        'Unlimited classes',
-        'Access to all locations',
-        'Premium workshop access',
-        'Personal training session'
-      ]
-    },
-    {
-      id: '3',
-      name: 'Annual',
-      price: 999,
-      durationMonths: 12,
-      features: [
-        'Unlimited classes',
-        'Access to all locations',
-        'All workshop access',
-        'Monthly personal training',
-        'Guest passes'
-      ]
-    }
-  ];
+  const plans = pricingData.pricing;
 
   return (
     <div className="bg-gray-100 py-12">
