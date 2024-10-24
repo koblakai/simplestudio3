@@ -1,10 +1,56 @@
 
 import React from 'react';
 import { Check } from 'lucide-react';
-import pricingData from '../../data/pricing.json';
+
+interface PricingPlan {
+  id: string;
+  name: string;
+  price: number;
+  features: string[];
+  durationMonths: number;
+}
 
 const Pricing: React.FC = () => {
-  const plans = pricingData.pricing;
+  const pricingData = {
+    pricing: [
+      {
+        id: 'basic',
+        name: 'Basic',
+        price: 99,
+        durationMonths: 1,
+        features: [
+          'Unlimited classes',
+          'Access to all locations',
+          'Basic workshop access'
+        ]
+      },
+      {
+        id: 'premium',
+        name: 'Premium',
+        price: 149,
+        durationMonths: 1,
+        features: [
+          'Unlimited classes',
+          'Access to all locations',
+          'Premium workshop access',
+          'Personal training session'
+        ]
+      },
+      {
+        id: 'annual',
+        name: 'Annual',
+        price: 999,
+        durationMonths: 12,
+        features: [
+          'Unlimited classes',
+          'Access to all locations',
+          'All workshop access',
+          'Monthly personal training',
+          'Guest passes'
+        ]
+      }
+    ] as PricingPlan[]
+  };
 
   return (
     <div className="bg-gray-100 py-12">
@@ -19,7 +65,7 @@ const Pricing: React.FC = () => {
         </div>
 
         <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:grid-cols-3">
-          {plans.map((plan) => (
+          {pricingData.pricing.map((plan) => (
             <div key={plan.id} className="bg-white border border-gray-200 rounded-lg shadow-sm divide-y divide-gray-200">
               <div className="p-6">
                 <h3 className="text-lg font-medium text-gray-900">{plan.name}</h3>
