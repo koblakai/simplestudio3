@@ -1,23 +1,23 @@
 {
   "pricing": [
     {
+      "price": 80,
       "description": [
         "Access to all class for one month"
       ],
       "name": "Monthly Unlimited",
-      "price": 80,
       "features": [
         "Access to all class for one month"
       ],
       "durationMonths": 1
     },
     {
+      "price": 120,
       "name": "Monthly Premium",
       "description": [
         "Access to all classes for one month",
         "Yoga mat rental"
       ],
-      "price": 120,
       "features": [
         "Access to all classes for one month",
         "Yoga mat rental"
@@ -25,24 +25,24 @@
       "durationMonths": 1
     },
     {
+      "price": 999,
+      "name": "Yearly Unlimited",
       "description": [
         "Access to all classes for one year "
       ],
-      "name": "Yearly Unlimited",
-      "price": 999,
       "features": [
         "Access to all classes for one year "
       ],
       "durationMonths": 1
     },
     {
-      "name": "Yearly Premium",
       "price": 1199,
       "description": [
         "Access to All Classes",
         "Mat Rental",
         "Access to 2 Specialized Workshops"
       ],
+      "name": "Yearly Premium",
       "features": [
         "Access to All Classes",
         "Mat Rental",
@@ -51,31 +51,31 @@
       "durationMonths": 1
     },
     {
-      "durationMonths": 1,
-      "price": 30,
       "description": [
         "Access to one class"
       ],
+      "price": 30,
       "paymentLink": "",
+      "durationMonths": 1,
       "name": "Walk-in ",
       "features": [
         "Access to one class"
       ]
     },
     {
+      "paymentLink": "",
       "description": [
         "Access to one class",
         "Yoga Mat Rental"
       ],
-      "price": 50,
       "name": "Walk-in premium",
       "durationMonths": 1,
-      "paymentLink": "",
+      "price": 50,
       "features": [
         "Access to one class",
         "Yoga Mat Rental"
       ]
     }
   ],
-  "lastUpdated": "2024-10-24T11:57:00.220Z"
+  "lastUpdated": "2024-10-24T12:10:43.071Z"
 }
