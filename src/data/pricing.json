@@ -1,10 +1,10 @@
 {
   "pricing": [
     {
+      "price": 80,
       "description": [
         "Access to all class for one month"
       ],
-      "price": 80,
       "name": "Monthly Unlimited",
       "features": [
         "Access to all class for one month"
@@ -13,11 +13,11 @@
     },
     {
       "price": 120,
-      "name": "Monthly Premium",
       "description": [
         "Access to all classes for one month",
         "Yoga mat rental"
       ],
+      "name": "Monthly Premium",
       "features": [
         "Access to all classes for one month",
         "Yoga mat rental"
@@ -36,13 +36,13 @@
       "durationMonths": 1
     },
     {
+      "name": "Yearly Premium",
+      "price": 1199,
       "description": [
         "Access to All Classes",
         "Mat Rental",
         "Access to 2 Specialized Workshops"
       ],
-      "name": "Yearly Premium",
-      "price": 1199,
       "features": [
         "Access to All Classes",
         "Mat Rental",
@@ -56,20 +56,20 @@
       "description": [
         "Access to one class"
       ],
-      "paymentLink": "",
       "price": 30,
+      "paymentLink": "",
       "features": [
         "Access to one class"
       ]
     },
     {
-      "price": 50,
       "name": "Walk-in premium",
-      "paymentLink": "",
       "description": [
         "Access to one class",
         "Yoga Mat Rental"
       ],
+      "paymentLink": "",
+      "price": 50,
       "durationMonths": 1,
       "features": [
         "Access to one class",
@@ -77,5 +77,5 @@
       ]
     }
   ],
-  "lastUpdated": "2024-10-24T15:50:57.423Z"
+  "lastUpdated": "2024-10-24T15:58:47.495Z"
 }
