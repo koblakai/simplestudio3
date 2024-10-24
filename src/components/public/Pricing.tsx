@@ -23,23 +23,38 @@ const SignupModal: React.FC<SignupModalProps> = ({ plan, onClose }) => {
     setIsSubmitting(true);
     setError(null);
 
+    if (!db) {
+      setError('Unable to connect to the database. Please try again later.');
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
-      // Create membership directly without payment
+      const membersRef = collection(db, 'members');
+      if (!membersRef) {
+        throw new Error('Database collection not accessible');
+      }
+
       const expirationDate = new Date();
       expirationDate.setMonth(expirationDate.getMonth() + (plan.durationMonths || 1));
 
-      await addDoc(collection(db, 'members'), {
+      await addDoc(membersRef, {
         firstName,
         lastName,
         email,
         membershipType: plan.name,
         signUpDate: new Date().toISOString(),
         expirationDate: expirationDate.toISOString(),
-        active: true
+        active: true,
+        createdAt: new Date().toISOString(),
+      }).catch(err => {
+        console.error('Error adding document:', err);
+        throw new Error('Failed to create membership. Please try again.');
       });
 
       setSuccess(true);
     } catch (err: any) {
+      console.error('Signup error:', err);
       setError(err.message || 'Failed to sign up. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -65,7 +80,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ plan, onClose }) => {
                   type="text"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
                   required
                 />
               </div>
@@ -75,7 +90,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ plan, onClose }) => {
                   type="text"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
                   required
                 />
               </div>
@@ -85,7 +100,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ plan, onClose }) => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
                   required
                 />
               </div>
@@ -97,7 +112,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ plan, onClose }) => {
               </div>
 
               {error && (
-                <div className="text-red-600 text-sm">{error}</div>
+                <div className="text-red-600 text-sm bg-red-50 p-2 rounded">{error}</div>
               )}
 
               <div className="flex space-x-3">
