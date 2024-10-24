@@ -5,16 +5,13 @@ import { Check, X } from 'lucide-react';
 import { db } from '../../firebase/config';
 import { collection, addDoc } from 'firebase/firestore';
 
-interface PricingPlan {
-  id: string;
-  name: string;
-  price: number;
-  description: string[];
-  durationMonths: number;
-}
-
 interface SignupModalProps {
-  plan: PricingPlan;
+  plan: {
+    name: string;
+    price: number;
+    durationMonths: number;
+    description: string[];
+  };
   onClose: () => void;
 }
 
@@ -32,11 +29,14 @@ const SignupModal: React.FC<SignupModalProps> = ({ plan, onClose }) => {
     setError(null);
 
     try {
-      // Calculate membership expiration
+      if (!db) {
+        throw new Error('Database connection not available');
+      }
+
       const expirationDate = new Date();
       expirationDate.setMonth(expirationDate.getMonth() + (plan.durationMonths || 1));
 
-      // Create member document in Firestore
+      // Create member document
       await addDoc(collection(db, 'members'), {
         firstName,
         lastName,
@@ -47,15 +47,13 @@ const SignupModal: React.FC<SignupModalProps> = ({ plan, onClose }) => {
         expirationDate: expirationDate.toISOString(),
         active: true,
         createdAt: new Date().toISOString(),
-        durationMonths: plan.durationMonths,
-        isPublicSignup: true // Flag to indicate this was created through public signup
+        isPublicSignup: true
       });
 
       setSuccess(true);
     } catch (err: any) {
       console.error('Signup error:', err);
-      setError('There was an error processing your signup. Please try again.');
-    } finally {
+      setError(err.message || 'Failed to process signup. Please try again.');
       setIsSubmitting(false);
     }
   };
@@ -150,7 +148,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ plan, onClose }) => {
 };
 
 const Pricing: React.FC = () => {
-  const [selectedPlan, setSelectedPlan] = useState<PricingPlan | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState(null);
 
   return (
     <div className="bg-gray-100 py-12">
