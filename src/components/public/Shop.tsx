@@ -21,7 +21,7 @@ const Shop: React.FC = () => {
             <img src={item.image} alt={item.name} className="w-full h-48 object-cover" />
             <div className="p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.name}</h3>
-              <p className="text-gray-600 mb-4">\${item.price.toFixed(2)}</p>
+              <p className="text-gray-600 mb-4">$${item.price.toFixed(2)}</p>
               <button className="w-full bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 transition duration-200">
                 Add to Cart
               </button>
