@@ -32,24 +32,29 @@ const SignupModal: React.FC<SignupModalProps> = ({ plan, onClose }) => {
     setError(null);
 
     try {
+      // Calculate membership expiration
       const expirationDate = new Date();
-      expirationDate.setMonth(expirationDate.getMonth() + plan.durationMonths);
+      expirationDate.setMonth(expirationDate.getMonth() + (plan.durationMonths || 1));
 
-      // Create member document
+      // Create member document in Firestore
       await addDoc(collection(db, 'members'), {
         firstName,
         lastName,
         email,
         membershipType: plan.name,
+        membershipPrice: plan.price,
         signUpDate: new Date().toISOString(),
         expirationDate: expirationDate.toISOString(),
-        active: true
+        active: true,
+        createdAt: new Date().toISOString(),
+        durationMonths: plan.durationMonths,
+        isPublicSignup: true // Flag to indicate this was created through public signup
       });
 
       setSuccess(true);
     } catch (err: any) {
       console.error('Signup error:', err);
-      setError(err.message || 'Failed to sign up. Please try again.');
+      setError('There was an error processing your signup. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -129,7 +134,8 @@ const SignupModal: React.FC<SignupModalProps> = ({ plan, onClose }) => {
           </form>
         ) : (
           <div>
-            <p className="text-green-600 mb-4">Signup successful! Welcome to our studio.</p>
+            <p className="text-green-600 mb-4">Welcome to our studio! Your membership has been activated.</p>
+            <p className="text-sm text-gray-600 mb-4">You can now book classes using your email address.</p>
             <button
               onClick={onClose}
               className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
