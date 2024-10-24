@@ -21,50 +21,50 @@ export interface Config {
 // Ensure pricing plans have all required properties
 const pricingWithIds = [
   {
+    "name": "Monthly Unlimited",
+    "price": 80,
     "description": [
       "Access to all class for one month"
-    ],
-    "name": "Monthly Unlimited",
-    "price": 80
+    ]
   },
   {
-    "price": 120,
     "description": [
       "Access to all classes for one month",
       "Yoga mat rental"
     ],
+    "price": 120,
     "name": "Monthly Premium"
   },
   {
-    "name": "Yearly Unlimited",
     "price": 999,
     "description": [
       "Access to all classes for one year "
-    ]
+    ],
+    "name": "Yearly Unlimited"
   },
   {
+    "price": 1199,
     "description": [
       "Access to All Classes",
       "Mat Rental",
       "Access to 2 Specialized Workshops"
     ],
-    "name": "Yearly Premium",
-    "price": 1199
+    "name": "Yearly Premium"
   },
   {
     "durationMonths": 1,
-    "paymentLink": "",
+    "price": 30,
     "description": [
       "Access to one class"
     ],
-    "name": "Walk-in ",
-    "price": 30
+    "paymentLink": "",
+    "name": "Walk-in "
   },
   {
-    "price": 50,
     "name": "Walk-in premium",
     "paymentLink": "",
     "durationMonths": 1,
+    "price": 50,
     "description": [
       "Access to one class",
       "Yoga Mat Rental"
