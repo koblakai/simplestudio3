@@ -22,7 +22,7 @@ const Pricing: React.FC = () => {
               <div className="p-6">
                 <h3 className="text-lg font-medium text-gray-900">{plan.name}</h3>
                 <p className="mt-8">
-                  <span className="text-4xl font-extrabold text-gray-900">${plan.price}</span>
+                  <span className="text-4xl font-extrabold text-gray-900">\${plan.price}</span>
                   <span className="text-base font-medium text-gray-500">/month</span>
                 </p>
                 <a
