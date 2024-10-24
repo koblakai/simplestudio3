@@ -19,9 +19,7 @@ try {
   db = getFirestore(app);
   
   // Enable offline persistence with multi-tab support
-  enableIndexedDbPersistence(db, {
-    synchronizeTabs: true
-  }).catch((err) => {
+  enableIndexedDbPersistence(db, { synchronizeTabs: true }).catch((err) => {
     if (err.code === 'failed-precondition') {
       console.warn('Multiple tabs open, persistence enabled in another tab');
     } else if (err.code === 'unimplemented') {
