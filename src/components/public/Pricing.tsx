@@ -103,7 +103,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ plan, onClose }) => {
 
               <div className="mt-4">
                 <p className="font-medium">Plan Details:</p>
-                <p>{plan.name} - $${plan.price}/month</p>
+                <p>{plan.name} - ${plan.price}/month</p>
                 <p>{plan.durationMonths} month{plan.durationMonths > 1 ? 's' : ''}</p>
               </div>
 
@@ -173,7 +173,7 @@ const Pricing: React.FC = () => {
                 </h3>
                 <p className="mt-8">
                   <span className="text-4xl font-extrabold text-gray-900">
-                    $${plan.price}
+                    ${plan.price}
                   </span>
                   <span className="text-base font-medium text-gray-500">
                     /month
