@@ -5,7 +5,7 @@ export interface PricingPlan {
   price: number;
   description: string[];
   durationMonths: number;
-  paymentLink?: string;  // Make paymentLink optional with ?
+  paymentLink?: string;
 }
 
 export interface Config {
@@ -18,34 +18,28 @@ export interface Config {
   pricing: PricingPlan[];
 }
 
-export const config: Config = {
-  studioName: "Simple Studio",
-  locations: [],
-  socialMedia: [],
-  enableBlog: false,
-  enableShop: false,
-  landingPageImage: "https://images.unsplash.com/photo-1524863479829-916d8e77f114?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80",
-  pricing: [
+// Ensure pricing plans have all required properties
+const pricingWithIds = [
   {
-    "price": 80,
     "description": [
       "Access to all class for one month"
     ],
+    "price": 80,
     "name": "Monthly Unlimited"
   },
   {
-    "name": "Monthly Premium",
     "price": 120,
     "description": [
       "Access to all classes for one month",
       "Yoga mat rental"
-    ]
+    ],
+    "name": "Monthly Premium"
   },
   {
+    "price": 999,
     "description": [
       "Access to all classes for one year "
     ],
-    "price": 999,
     "name": "Yearly Unlimited"
   },
   {
@@ -54,27 +48,43 @@ export const config: Config = {
       "Mat Rental",
       "Access to 2 Specialized Workshops"
     ],
-    "price": 1199,
-    "name": "Yearly Premium"
+    "name": "Yearly Premium",
+    "price": 1199
   },
   {
-    "paymentLink": "",
     "price": 30,
     "durationMonths": 1,
+    "paymentLink": "",
     "name": "Walk-in ",
     "description": [
       "Access to one class"
     ]
   },
   {
-    "paymentLink": "",
     "description": [
       "Access to one class",
       "Yoga Mat Rental"
     ],
-    "durationMonths": 1,
+    "price": 50,
     "name": "Walk-in premium",
-    "price": 50
+    "paymentLink": "",
+    "durationMonths": 1
   }
-],
+].map((plan: any, index: number) => ({
+  id: plan.id || `plan-${index + 1}`,
+  name: plan.name,
+  price: Number(plan.price),
+  description: plan.description || [],
+  durationMonths: Number(plan.durationMonths) || 1,
+  paymentLink: plan.paymentLink,
+}));
+
+export const config: Config = {
+  studioName: "Simple Studio",
+  locations: [],
+  socialMedia: [],
+  enableBlog: false,
+  enableShop: false,
+  landingPageImage: "https://images.unsplash.com/photo-1524863479829-916d8e77f114?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80",
+  pricing: pricingWithIds,
 };
