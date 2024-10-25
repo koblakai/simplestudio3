@@ -19,19 +19,19 @@ export interface Config {
 
 const pricingWithIds = [
   {
-    "price": 80,
     "name": "Monthly Unlimited",
+    "price": 80,
     "description": [
       "Access to all class for one month"
     ]
   },
   {
+    "price": 120,
     "name": "Monthly Premium",
     "description": [
       "Access to all classes for one month",
       "Yoga mat rental"
-    ],
-    "price": 120
+    ]
   },
   {
     "name": "Yearly Unlimited",
@@ -50,21 +50,21 @@ const pricingWithIds = [
     "price": 1199
   },
   {
-    "price": 30,
-    "durationMonths": 1,
     "paymentLink": "",
+    "name": "Walk-in ",
+    "durationMonths": 1,
     "description": [
       "Access to one class"
     ],
-    "name": "Walk-in "
+    "price": 30
   },
   {
-    "durationMonths": 1,
     "name": "Walk-in premium",
     "description": [
       "Access to one class",
       "Yoga Mat Rental"
     ],
+    "durationMonths": 1,
     "paymentLink": "",
     "price": 50
   }
