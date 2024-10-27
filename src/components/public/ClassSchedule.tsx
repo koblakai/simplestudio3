@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   format,
   startOfWeek,
@@ -7,6 +7,9 @@ import {
   isSameDay,
   addWeeks,
   subWeeks,
+  addDays,
+  isAfter,
+  isBefore,
 } from 'date-fns';
 import {
   Clock,
@@ -18,21 +21,21 @@ import {
   ChevronUp,
 } from 'lucide-react';
 
-// Import classes data from settings
+// Import classes data from a local JSON file
 import classesData from '../../data/classes.json';
 
 interface Class {
   id: string;
   title: string;
   instructor: string;
-  start: string;
-  end: string;
+  start: string; // Changed to string to match JSON data
+  end: string;   // Changed to string to match JSON data
   capacity: number;
   room: string;
   description: string;
 }
 
-const BookingModal = ({ classItem, onClose }: { classItem: Class; onClose: () => void }): JSX.Element => {
+const BookingModal: React.FC<{ classItem: Class; onClose: () => void }> = ({ classItem, onClose }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 max-w-md w-full">
@@ -65,34 +68,53 @@ const BookingModal = ({ classItem, onClose }: { classItem: Class; onClose: () =>
 };
 
 const ClassSchedule: React.FC = () => {
+  const [classes, setClasses] = useState<Class[]>([]);
   const [selectedClass, setSelectedClass] = useState<Class | null>(null);
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [showUpcomingClasses, setShowUpcomingClasses] = useState(false);
   const [currentWeekStart, setCurrentWeekStart] = useState<Date>(
     startOfWeek(new Date(), { weekStartsOn: 1 })
   );
+  const [thisWeekClasses, setThisWeekClasses] = useState<{ [key: string]: Class[] }>({});
+  const [upcomingClasses, setUpcomingClasses] = useState<Class[]>([]);
 
-  const weekDays = eachDayOfInterval({
-    start: currentWeekStart,
-    end: endOfWeek(currentWeekStart, { weekStartsOn: 1 }),
-  });
+  useEffect(() => {
+    // Retrieve classes data from the JSON file
+    setClasses(classesData.classes);
+  }, []);
 
-  const classes = classesData.classes;
-  const thisWeekClasses = weekDays.reduce((acc, day) => {
-    const dayKey = format(day, 'yyyy-MM-dd');
-    acc[dayKey] = classes
-      .filter((c) => isSameDay(new Date(c.start), day))
-      .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime());
-    return acc;
-  }, {} as Record<string, Class[]>);
-
-  const upcomingClasses = classes
-    .filter((c) => {
-      const classStart = new Date(c.start);
+  useEffect(() => {
+    const updateClasses = () => {
       const weekEnd = endOfWeek(currentWeekStart, { weekStartsOn: 1 });
-      return classStart > weekEnd && classStart <= new Date(weekEnd.getTime() + 30 * 24 * 60 * 60 * 1000);
-    })
-    .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime());
+      const weekDays = eachDayOfInterval({ start: currentWeekStart, end: weekEnd });
+      const thirtyDaysFromNow = addDays(new Date(), 30);
+
+      // Organize this week's classes by day
+      const thisWeek: { [key: string]: Class[] } = {};
+      weekDays.forEach((day) => {
+        const dayKey = format(day, 'yyyy-MM-dd');
+        thisWeek[dayKey] = classes
+          .filter((c: Class) => {
+            const classStart = new Date(c.start);
+            return isSameDay(classStart, day);
+          })
+          .sort((a: Class, b: Class) => new Date(a.start).getTime() - new Date(b.start).getTime());
+      });
+
+      // Get upcoming classes for the next 30 days
+      const upcoming = classes
+        .filter((c: Class) => {
+          const classStart = new Date(c.start);
+          return isAfter(classStart, weekEnd) && isBefore(classStart, thirtyDaysFromNow);
+        })
+        .sort((a: Class, b: Class) => new Date(a.start).getTime() - new Date(b.start).getTime());
+
+      setThisWeekClasses(thisWeek);
+      setUpcomingClasses(upcoming);
+    };
+
+    updateClasses();
+  }, [classes, currentWeekStart]);
 
   const handleBookNow = (classItem: Class) => {
     setSelectedClass(classItem);
@@ -106,6 +128,11 @@ const ClassSchedule: React.FC = () => {
   const goToNextWeek = () => {
     setCurrentWeekStart(addWeeks(currentWeekStart, 1));
   };
+
+  const weekDays = eachDayOfInterval({
+    start: currentWeekStart,
+    end: endOfWeek(currentWeekStart, { weekStartsOn: 1 }),
+  });
 
   return (
     <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
