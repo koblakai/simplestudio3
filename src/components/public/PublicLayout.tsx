@@ -9,7 +9,7 @@ import ClassSchedule from './ClassSchedule';
 import Blog from './Blog';
 import Shop from './Shop';
 
-interface Class {
+export interface Class {
   id: string;
   title: string;
   instructor: string;
