@@ -9,6 +9,11 @@
   VITE_FIREBASE_STORAGE_BUCKET = "simple-studio-a2535.appspot.com"
   VITE_FIREBASE_MESSAGING_SENDER_ID = "424159773897"
   VITE_FIREBASE_APP_ID = "1:424159773897:web:6b855166ca5a9547187918"
+
+  [build]
+  command = "your build command here"
+  publish = "your publish directory here"
+  node_version = "14"
   
 [[redirects]]
   from = "/*"
