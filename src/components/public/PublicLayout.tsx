@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
-import { collection, getDocs } from 'firebase/firestore';
 import { config } from '../../config';
-import { db } from '../../firebase/config';
+import classesData from '../../data/classes.json';
 import Home from './Home';
 import Pricing from './Pricing';
 import ClassSchedule from './ClassSchedule';
@@ -13,38 +12,20 @@ interface Class {
   id: string;
   title: string;
   instructor: string;
-  start: Date;
-  end: Date;
+  start: string;
+  end: string;
   capacity: number;
   room: string;
   description: string;
 }
 
 const PublicLayout: React.FC = () => {
-  const [classes, setClasses] = useState<Class[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchClasses = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, 'classes'));
-        const classesData = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-          start: new Date(doc.data().start),
-          end: new Date(doc.data().end)
-        })) as Class[];
-        setClasses(classesData);
-      } catch (error) {
-        console.error('Error fetching classes:', error);
-        setClasses([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchClasses();
-  }, []);
+  // Convert the dates from strings to Date objects
+  const classes = classesData.classes.map(cls => ({
+    ...cls,
+    start: new Date(cls.start),
+    end: new Date(cls.end)
+  }));
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -85,18 +66,7 @@ const PublicLayout: React.FC = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/pricing" element={<Pricing />} />
-          <Route 
-            path="/schedule" 
-            element={
-              loading ? (
-                <div className="flex items-center justify-center h-screen">
-                  <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600"></div>
-                </div>
-              ) : (
-                <ClassSchedule classes={classes} />
-              )
-            } 
-          />
+          <Route path="/schedule" element={<ClassSchedule classes={classes} />} />
           {config.enableBlog && <Route path="/blog" element={<Blog />} />}
           {config.enableShop && <Route path="/shop" element={<Shop />} />}
         </Routes>
