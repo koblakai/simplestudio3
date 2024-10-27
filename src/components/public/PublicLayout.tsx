@@ -1,31 +1,16 @@
 import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
 import { config } from '../../config';
-import classesData from '../../data/classes.json';
+import { settings } from '../../settings';  // Import settings directly
 import Home from './Home';
 import Pricing from './Pricing';
 import ClassSchedule from './ClassSchedule';
 import Blog from './Blog';
 import Shop from './Shop';
 
-interface Class {
-  id: string;
-  title: string;
-  instructor: string;
-  start: string;
-  end: string;
-  capacity: number;
-  room: string;
-  description: string;
-}
-
 const PublicLayout: React.FC = () => {
-  // Convert the dates from strings to Date objects
-  const classes = classesData.classes.map(cls => ({
-    ...cls,
-    start: new Date(cls.start),
-    end: new Date(cls.end)
-  }));
+  // Get classes directly from settings
+  const classes = settings.classes;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -66,7 +51,7 @@ const PublicLayout: React.FC = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/pricing" element={<Pricing />} />
-          <Route path="/schedule" element={<ClassSchedule classes={classes} />} />
+          <Route path="/schedule" element={<ClassSchedule />} />
           {config.enableBlog && <Route path="/blog" element={<Blog />} />}
           {config.enableShop && <Route path="/shop" element={<Shop />} />}
         </Routes>
