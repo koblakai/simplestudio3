@@ -28,8 +28,8 @@ interface ClassItem {
   id: string;
   title: string;
   instructor: string;
-  start: string;
-  end: string;
+  start: Date; // Changed to Date
+  end: Date;   // Changed to Date
   room: string;
   capacity: number;
 }
@@ -40,6 +40,7 @@ interface BookingModalProps {
 }
 
 const BookingModal: React.FC<BookingModalProps> = ({ classItem, onClose }) => {
+  // BookingModal code remains the same
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -117,8 +118,8 @@ const BookingModal: React.FC<BookingModalProps> = ({ classItem, onClose }) => {
 
             <div className="mb-4 text-sm text-gray-600">
               <p>Class Details:</p>
-              <p>Date: {format(new Date(classItem.start), 'MM/dd/yyyy')}</p>
-              <p>Time: {format(new Date(classItem.start), 'h:mm a')}</p>
+              <p>Date: {format(classItem.start, 'MM/dd/yyyy')}</p>
+              <p>Time: {format(classItem.start, 'h:mm a')}</p>
               <p>Instructor: {classItem.instructor}</p>
               <p>Room: {classItem.room}</p>
             </div>
@@ -183,8 +184,8 @@ const ClassSchedule: React.FC = () => {
             id: doc.id,
             title: data.title,
             instructor: data.instructor,
-            start: data.start,
-            end: data.end,
+            start: data.start.toDate(), // Convert Timestamp to Date
+            end: data.end.toDate(),     // Convert Timestamp to Date
             room: data.room,
             capacity: data.capacity,
           };
@@ -213,26 +214,20 @@ const ClassSchedule: React.FC = () => {
       weekDays.forEach((day) => {
         const dayKey = format(day, 'yyyy-MM-dd');
         thisWeek[dayKey] = classes
-          .filter((classItem) => isSameDay(new Date(classItem.start), day))
-          .sort(
-            (a, b) =>
-              new Date(a.start).getTime() - new Date(b.start).getTime()
-          );
+          .filter((classItem) => isSameDay(classItem.start, day))
+          .sort((a, b) => a.start.getTime() - b.start.getTime());
       });
 
       // Get upcoming classes for the next 30 days
       const upcoming = classes
         .filter((classItem) => {
-          const classStart = new Date(classItem.start);
+          const classStart = classItem.start;
           return (
             isAfter(classStart, weekEnd) &&
             isBefore(classStart, thirtyDaysFromNow)
           );
         })
-        .sort(
-          (a, b) =>
-            new Date(a.start).getTime() - new Date(b.start).getTime()
-        );
+        .sort((a, b) => a.start.getTime() - b.start.getTime());
 
       setThisWeekClasses(thisWeek);
       setUpcomingClasses(upcoming);
@@ -319,8 +314,8 @@ const ClassSchedule: React.FC = () => {
                       <div className="text-sm space-y-1 mt-2">
                         <div className="flex items-center text-gray-600">
                           <Clock className="w-4 h-4 mr-2" />
-                          {format(new Date(classItem.start), 'h:mm a')} -{' '}
-                          {format(new Date(classItem.end), 'h:mm a')}
+                          {format(classItem.start, 'h:mm a')} -{' '}
+                          {format(classItem.end, 'h:mm a')}
                         </div>
                         <div className="flex items-center text-gray-600">
                           <User className="w-4 h-4 mr-2" />
@@ -381,13 +376,13 @@ const ClassSchedule: React.FC = () => {
                       {classItem.title}
                     </h5>
                     <p className="text-sm text-gray-500 mt-1">
-                      {format(new Date(classItem.start), 'EEEE, MMMM d')}
+                      {format(classItem.start, 'EEEE, MMMM d')}
                     </p>
                     <div className="text-sm space-y-1 mt-2">
                       <div className="flex items-center text-gray-600">
                         <Clock className="w-4 h-4 mr-2" />
-                        {format(new Date(classItem.start), 'h:mm a')} -{' '}
-                        {format(new Date(classItem.end), 'h:mm a')}
+                        {format(classItem.start, 'h:mm a')} -{' '}
+                        {format(classItem.end, 'h:mm a')}
                       </div>
                       <div className="flex items-center text-gray-600">
                         <User className="w-4 h-4 mr-2" />
