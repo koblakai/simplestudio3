@@ -1,47 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
 import { config } from '../../config';
-import { db } from '../../firebase/config';
-import { collection, getDocs } from 'firebase/firestore';
 import Home from './Home';
 import Pricing from './Pricing';
 import ClassSchedule from './ClassSchedule';
 import Blog from './Blog';
 import Shop from './Shop';
 
-interface Class {
-  id: string;
-  title: string;
-  instructor: string;
-  start: Date;
-  end: Date;
-  capacity: number;
-  room: string;
-  description: string;
-}
-
 const PublicLayout: React.FC = () => {
-  const [classes, setClasses] = useState<Class[]>([]);
-
-  useEffect(() => {
-    const fetchClasses = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, 'classes'));
-        const classesData = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data(),
-          start: new Date(doc.data().start),
-          end: new Date(doc.data().end)
-        })) as Class[];
-        setClasses(classesData);
-      } catch (error) {
-        console.error('Error fetching classes:', error);
-      }
-    };
-
-    fetchClasses();
-  }, []);
-
   return (
     <div className="min-h-screen flex flex-col">
       <header className="bg-white shadow">
@@ -81,7 +47,7 @@ const PublicLayout: React.FC = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/pricing" element={<Pricing />} />
-          <Route path="/schedule" element={<ClassSchedule classes={classes} />} />
+          <Route path="/schedule" element={<ClassSchedule />} />
           {config.enableBlog && <Route path="/blog" element={<Blog />} />}
           {config.enableShop && <Route path="/shop" element={<Shop />} />}
         </Routes>
