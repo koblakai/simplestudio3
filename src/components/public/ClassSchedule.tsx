@@ -28,8 +28,8 @@ interface ClassItem {
   id: string;
   title: string;
   instructor: string;
-  start: Date; // Changed to Date
-  end: Date;   // Changed to Date
+  start: Date; // Ensure start is Date
+  end: Date;   // Ensure end is Date
   room: string;
   capacity: number;
 }
@@ -40,7 +40,6 @@ interface BookingModalProps {
 }
 
 const BookingModal: React.FC<BookingModalProps> = ({ classItem, onClose }) => {
-  // BookingModal code remains the same
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -80,6 +79,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ classItem, onClose }) => {
 
       setSuccess(true);
     } catch (err: any) {
+      console.error('Booking error:', err);
       setError(err.message || 'Failed to book class. Please try again.');
     } finally {
       setIsSubmitting(false);
