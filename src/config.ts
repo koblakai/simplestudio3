@@ -19,19 +19,19 @@ export interface Config {
 
 const pricingWithIds = [
   {
-    "name": "Monthly Unlimited",
-    "price": 80,
     "description": [
       "Access to all class for one month"
-    ]
+    ],
+    "price": 80,
+    "name": "Monthly Unlimited"
   },
   {
     "price": 120,
-    "name": "Monthly Premium",
     "description": [
       "Access to all classes for one month",
       "Yoga mat rental"
-    ]
+    ],
+    "name": "Monthly Premium"
   },
   {
     "name": "Yearly Unlimited",
@@ -50,23 +50,13 @@ const pricingWithIds = [
     "price": 1199
   },
   {
-    "paymentLink": "",
-    "name": "Walk-in ",
     "durationMonths": 1,
     "description": [
       "Access to one class"
     ],
-    "price": 30
-  },
-  {
-    "name": "Walk-in premium",
-    "description": [
-      "Access to one class",
-      "Yoga Mat Rental"
-    ],
-    "durationMonths": 1,
     "paymentLink": "",
-    "price": 50
+    "price": 30,
+    "name": "Walk-in "
   }
 ].map((plan: any, index: number) => ({
   id: plan.id || `plan-${index + 1}`,
