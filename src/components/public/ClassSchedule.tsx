@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   format,
   startOfWeek,
@@ -7,9 +7,6 @@ import {
   isSameDay,
   addWeeks,
   subWeeks,
-  addDays,
-  isAfter,
-  isBefore,
 } from 'date-fns';
 import {
   Clock,
@@ -160,4 +157,3 @@ const ClassSchedule: React.FC<{ classes: Class[] }> = ({ classes }) => {
 };
 
 export default ClassSchedule;
-
