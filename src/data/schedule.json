@@ -222,6 +222,16 @@
         "startTime": "11:00",
         "endTime": "12:00",
         "capacity": 20
+      }
+    ],
+    "friday": [
+      {
+        "title": "Slow Flow Vinyasa ",
+        "instructor": "Lindsey Pierce",
+        "room": "Yoga Studio 2",
+        "startTime": "10:30",
+        "endTime": "11:30",
+        "capacity": 30
       },
       {
         "title": "Vinyasa Flow ",
@@ -230,16 +240,6 @@
         "startTime": "11:00",
         "endTime": "12:00",
         "capacity": 20
-      }
-    ],
-    "friday": [
-      {
-        "title": "Slow Flow Vinyasa ",
-        "instructor": "Lindsey Pierce",
-        "room": "Yoga Studio 2",
-        "startTime": "10:00",
-        "endTime": "11:00",
-        "capacity": 30
       },
       {
         "title": "Vinyasa Flow ",
@@ -351,5 +351,5 @@
       }
     ]
   },
-  "lastUpdated": "2024-10-27T23:06:38.935Z"
+  "lastUpdated": "2024-10-28T01:23:20.768Z"
 }
