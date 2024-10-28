@@ -26,13 +26,19 @@ import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 
 interface ClassItem {
   id: string;
-  title: string;
+  name: string;          // Instead of title
   instructor: string;
-  start: Date; // Ensure start is Date
-  end: Date;   // Ensure end is Date
+  start: Date;
+  end: Date;
   room: string;
   capacity: number;
+  description: string;
+  isRecurring: boolean;
+  locationId: string;
+  date: string;
+  time: string;
 }
+
 
 interface BookingModalProps {
   classItem: ClassItem;
