@@ -90,7 +90,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ classItem, onClose }) => {
       <div className="bg-white rounded-lg p-6 max-w-md w-full">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold">
-            Book Class: {classItem.name}  // Changed from title to name
+            Book Class: {classItem.name} 
           </h3>
           <button
             onClick={onClose}
@@ -174,28 +174,56 @@ const ClassSchedule: React.FC = () => {
 
   useEffect(() => {
     const fetchClasses = async () => {
-      try {
-        const classesRef = collection(db, 'classes');
-        const snapshot = await getDocs(classesRef);
-        const fetchedClasses: ClassItem[] = snapshot.docs.map((doc) => {
-  const data = doc.data();
-  return {
-    id: doc.id,
-    name: data.name,    
-    instructor: data.instructor,
-    start: data.start?.toDate(), // Convert Timestamp to Date
-    end: data.end?.toDate(),     // Convert Timestamp to Date
-    room: data.room,
-    capacity: data.capacity,
-  };
-});
-        setClasses(fetchedClasses);
-      } catch (error) {
-        console.error('Error fetching classes:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  try {
+    const classesRef = collection(db, 'classes');
+    console.log('Fetching classes...');
+    const snapshot = await getDocs(classesRef);
+    console.log('Fetched docs:', snapshot.docs.length);
+    
+    const fetchedClasses: ClassItem[] = snapshot.docs.map((doc) => {
+      const data = doc.data();
+      
+      // Create a proper Date object by combining date and time
+      const [year, month, day] = data.date.split('-');
+      const [hours, minutes] = data.time.split(':');
+      
+      const startDate = new Date(year, month - 1, day, hours, minutes);
+      
+      // Create end date (assuming 1 hour duration - adjust as needed)
+      const endDate = new Date(startDate);
+      endDate.setHours(endDate.getHours() + 1);
+
+      return {
+        id: doc.id,
+        title: data.name,
+        instructor: data.instructor,
+        start: startDate,
+        end: endDate,
+        room: data.room,
+        capacity: data.capacity,
+        description: data.description,
+        isRecurring: data.isRecurring || false
+      };
+    });
+    
+    console.log('Processed classes:', fetchedClasses);
+    setClasses(fetchedClasses);
+  } catch (error) {
+    console.error('Error fetching classes:', error);
+  } finally {
+    setLoading(false);
+  }
+};
+
+  
+    console.log('Processed classes:', fetchedClasses);
+    setClasses(fetchedClasses);
+  } catch (error) {
+    console.error('Error fetching classes:', error);
+  } finally {
+    setLoading(false);
+  }
+};
 
     fetchClasses();
   }, []);
