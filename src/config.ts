@@ -26,37 +26,37 @@ const pricingWithIds = [
     "name": "Monthly Unlimited"
   },
   {
-    "price": 120,
+    "name": "Monthly Premium",
     "description": [
       "Access to all classes for one month",
       "Yoga mat rental"
     ],
-    "name": "Monthly Premium"
+    "price": 120
   },
   {
-    "name": "Yearly Unlimited",
     "price": 999,
     "description": [
       "Access to all classes for one year "
-    ]
+    ],
+    "name": "Yearly Unlimited"
   },
   {
-    "name": "Yearly Premium",
+    "price": 1199,
     "description": [
       "Access to All Classes",
       "Mat Rental",
       "Access to 2 Specialized Workshops"
     ],
-    "price": 1199
+    "name": "Yearly Premium"
   },
   {
-    "durationMonths": 1,
+    "paymentLink": "",
     "description": [
       "Access to one class"
     ],
-    "paymentLink": "",
     "price": 30,
-    "name": "Walk-in "
+    "name": "Walk-in ",
+    "durationMonths": 1
   }
 ].map((plan: any, index: number) => ({
   id: plan.id || `plan-${index + 1}`,
