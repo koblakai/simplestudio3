@@ -181,28 +181,33 @@ const ClassSchedule: React.FC = () => {
 
   useEffect(() => {
     const fetchClasses = async () => {
-      try {
-        const classesRef = collection(db, 'classes');
-        const snapshot = await getDocs(classesRef);
-        const fetchedClasses: ClassItem[] = snapshot.docs.map((doc) => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            title: data.title,
-            instructor: data.instructor,
-            start: data.start.toDate(), // Convert Timestamp to Date
-            end: data.end.toDate(),     // Convert Timestamp to Date
-            room: data.room,
-            capacity: data.capacity,
-          };
-        });
-        setClasses(fetchedClasses);
-      } catch (error) {
-        console.error('Error fetching classes:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  try {
+    const classesRef = collection(db, 'classes');
+    const snapshot = await getDocs(classesRef);
+    const fetchedClasses: ClassItem[] = snapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        name: data.name,           // Changed from title
+        instructor: data.instructor,
+        start: new Date(data.start), // Convert string to Date
+        end: new Date(data.end),     // Convert string to Date
+        room: data.room,
+        capacity: data.capacity,
+        description: data.description,
+        isRecurring: data.isRecurring,
+        locationId: data.locationId,
+        date: data.date,
+        time: data.time
+      };
+    });
+    setClasses(fetchedClasses);
+  } catch (error) {
+    console.error('Error fetching classes:', error);
+  } finally {
+    setLoading(false);
+  }
+};
 
     fetchClasses();
   }, []);
@@ -379,7 +384,7 @@ const ClassSchedule: React.FC = () => {
                 <div className="flex justify-between items-start">
                   <div>
                     <h5 className="font-semibold text-indigo-600">
-                      {classItem.title}
+                      {classItem.name}
                     </h5>
                     <p className="text-sm text-gray-500 mt-1">
                       {format(classItem.start, 'EEEE, MMMM d')}
