@@ -178,17 +178,17 @@ const ClassSchedule: React.FC = () => {
         const classesRef = collection(db, 'classes');
         const snapshot = await getDocs(classesRef);
         const fetchedClasses: ClassItem[] = snapshot.docs.map((doc) => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            name: data.name,    // Changed from title to name
-            instructor: data.instructor,
-            start: data.start,
-            end: data.end,
-            room: data.room,
-            capacity: data.capacity,
-          };
-        });
+  const data = doc.data();
+  return {
+    id: doc.id,
+    name: data.name,    
+    instructor: data.instructor,
+    start: data.start?.toDate(), // Convert Timestamp to Date
+    end: data.end?.toDate(),     // Convert Timestamp to Date
+    room: data.room,
+    capacity: data.capacity,
+  };
+});
         setClasses(fetchedClasses);
       } catch (error) {
         console.error('Error fetching classes:', error);
