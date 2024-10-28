@@ -26,19 +26,13 @@ import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
 
 interface ClassItem {
   id: string;
-  name: string;          // Instead of title
+  name: string;          // Using name consistently instead of title
   instructor: string;
-  start: Date;
-  end: Date;
+  start: string;
+  end: string;
   room: string;
   capacity: number;
-  description: string;
-  isRecurring: boolean;
-  locationId: string;
-  date: string;
-  time: string;
 }
-
 
 interface BookingModalProps {
   classItem: ClassItem;
@@ -76,7 +70,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ classItem, onClose }) => {
         classId: classItem.id,
         memberId: memberDoc.id,
         email,
-        className: classItem.title,
+        className: classItem.name,  // Changed from title to name
         date: classItem.start,
         instructor: classItem.instructor,
         room: classItem.room,
@@ -85,7 +79,6 @@ const BookingModal: React.FC<BookingModalProps> = ({ classItem, onClose }) => {
 
       setSuccess(true);
     } catch (err: any) {
-      console.error('Booking error:', err);
       setError(err.message || 'Failed to book class. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -97,7 +90,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ classItem, onClose }) => {
       <div className="bg-white rounded-lg p-6 max-w-md w-full">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold">
-            Book Class: {classItem.title}
+            Book Class: {classItem.name}  // Changed from title to name
           </h3>
           <button
             onClick={onClose}
@@ -124,8 +117,8 @@ const BookingModal: React.FC<BookingModalProps> = ({ classItem, onClose }) => {
 
             <div className="mb-4 text-sm text-gray-600">
               <p>Class Details:</p>
-              <p>Date: {format(classItem.start, 'MM/dd/yyyy')}</p>
-              <p>Time: {format(classItem.start, 'h:mm a')}</p>
+              <p>Date: {format(new Date(classItem.start), 'MM/dd/yyyy')}</p>
+              <p>Time: {format(new Date(classItem.start), 'h:mm a')}</p>
               <p>Instructor: {classItem.instructor}</p>
               <p>Room: {classItem.room}</p>
             </div>
@@ -181,33 +174,28 @@ const ClassSchedule: React.FC = () => {
 
   useEffect(() => {
     const fetchClasses = async () => {
-  try {
-    const classesRef = collection(db, 'classes');
-    const snapshot = await getDocs(classesRef);
-    const fetchedClasses: ClassItem[] = snapshot.docs.map((doc) => {
-      const data = doc.data();
-      return {
-        id: doc.id,
-        name: data.name,           // Changed from title
-        instructor: data.instructor,
-        start: new Date(data.start), // Convert string to Date
-        end: new Date(data.end),     // Convert string to Date
-        room: data.room,
-        capacity: data.capacity,
-        description: data.description,
-        isRecurring: data.isRecurring,
-        locationId: data.locationId,
-        date: data.date,
-        time: data.time
-      };
-    });
-    setClasses(fetchedClasses);
-  } catch (error) {
-    console.error('Error fetching classes:', error);
-  } finally {
-    setLoading(false);
-  }
-};
+      try {
+        const classesRef = collection(db, 'classes');
+        const snapshot = await getDocs(classesRef);
+        const fetchedClasses: ClassItem[] = snapshot.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            name: data.name,    // Changed from title to name
+            instructor: data.instructor,
+            start: data.start,
+            end: data.end,
+            room: data.room,
+            capacity: data.capacity,
+          };
+        });
+        setClasses(fetchedClasses);
+      } catch (error) {
+        console.error('Error fetching classes:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
     fetchClasses();
   }, []);
@@ -225,20 +213,26 @@ const ClassSchedule: React.FC = () => {
       weekDays.forEach((day) => {
         const dayKey = format(day, 'yyyy-MM-dd');
         thisWeek[dayKey] = classes
-          .filter((classItem) => isSameDay(classItem.start, day))
-          .sort((a, b) => a.start.getTime() - b.start.getTime());
+          .filter((classItem) => isSameDay(new Date(classItem.start), day))
+          .sort(
+            (a, b) =>
+              new Date(a.start).getTime() - new Date(b.start).getTime()
+          );
       });
 
       // Get upcoming classes for the next 30 days
       const upcoming = classes
         .filter((classItem) => {
-          const classStart = classItem.start;
+          const classStart = new Date(classItem.start);
           return (
             isAfter(classStart, weekEnd) &&
             isBefore(classStart, thirtyDaysFromNow)
           );
         })
-        .sort((a, b) => a.start.getTime() - b.start.getTime());
+        .sort(
+          (a, b) =>
+            new Date(a.start).getTime() - new Date(b.start).getTime()
+        );
 
       setThisWeekClasses(thisWeek);
       setUpcomingClasses(upcoming);
@@ -320,13 +314,13 @@ const ClassSchedule: React.FC = () => {
                       className="bg-white shadow-sm rounded-lg p-4"
                     >
                       <h5 className="font-semibold text-indigo-600">
-                        {classItem.title}
+                        {classItem.name}  // Changed from title to name
                       </h5>
                       <div className="text-sm space-y-1 mt-2">
                         <div className="flex items-center text-gray-600">
                           <Clock className="w-4 h-4 mr-2" />
-                          {format(classItem.start, 'h:mm a')} -{' '}
-                          {format(classItem.end, 'h:mm a')}
+                          {format(new Date(classItem.start), 'h:mm a')} -{' '}
+                          {format(new Date(classItem.end), 'h:mm a')}
                         </div>
                         <div className="flex items-center text-gray-600">
                           <User className="w-4 h-4 mr-2" />
@@ -373,7 +367,6 @@ const ClassSchedule: React.FC = () => {
             </>
           )}
         </button>
-
         {showUpcomingClasses && (
           <div className="space-y-4">
             {upcomingClasses.map((classItem) => (
