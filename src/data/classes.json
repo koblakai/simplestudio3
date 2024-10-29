@@ -29,6 +29,20 @@
       "instructor": "Lindsey Pierce"
     },
     {
+      "title": "Test Class 2 ",
+      "start": "2024-10-28T22:52:46",
+      "end": "2024-10-28T23:52:46",
+      "instructor": "Michael LaGrange",
+      "room": "Yoga Studio 1",
+      "capacity": 20,
+      "description": "Testing",
+      "recurring": false,
+      "frequency": "weekly",
+      "interval": 1,
+      "endDate": "2024-11-28T22:52:46",
+      "id": "c26355e6-f473-471d-ab3f-b8f7aa3f1fda"
+    },
+    {
       "instructor": "Lindsey Pierce",
       "frequency": "daily",
       "description": "",
@@ -408,20 +422,6 @@
     },
     {
       "interval": 1,
-      "recurring": true,
-      "title": "Hatha",
-      "instructor": "Lindsey Pierce",
-      "start": "2024-11-20T05:00:00",
-      "end": "2024-11-20T06:00:00",
-      "capacity": 30,
-      "endDate": "2024-12-18T05:00:00",
-      "id": "f238d62c-6ec5-41a4-beaa-11743d44bd13",
-      "frequency": "weekly",
-      "room": "Yoga Studio 2",
-      "description": ""
-    },
-    {
-      "interval": 1,
       "endDate": "2024-11-23T08:37:59",
       "description": "",
       "instructor": "Lindsey Pierce",
@@ -463,5 +463,5 @@
       "endDate": "2024-11-23T08:37:59"
     }
   ],
-  "lastUpdated": "2024-10-29T02:45:00.996Z"
+  "lastUpdated": "2024-10-29T02:53:47.674Z"
 }
