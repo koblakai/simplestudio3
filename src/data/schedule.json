@@ -134,14 +134,6 @@
         "capacity": 30
       },
       {
-        "title": "Hatha",
-        "instructor": "Lindsey Pierce",
-        "room": "Yoga Studio 2",
-        "startTime": "05:00",
-        "endTime": "06:00",
-        "capacity": 30
-      },
-      {
         "title": "Vinyasa Flow ",
         "instructor": "Lindsey Pierce",
         "room": "Yoga Studio 1",
@@ -351,5 +343,5 @@
       }
     ]
   },
-  "lastUpdated": "2024-10-29T02:45:00.998Z"
+  "lastUpdated": "2024-10-29T02:53:47.675Z"
 }
