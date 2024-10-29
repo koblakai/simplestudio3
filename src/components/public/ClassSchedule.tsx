@@ -28,11 +28,14 @@ interface ClassItem {
   id: string;
   name: string;
   instructor: string;
-  start: string;
-  end: string;
+  date: string;
+  time: string;
   room: string;
-  capacity: number;
+  capacity: string | number;
+  description?: string;
+  locationId?: string;
 }
+
 
 interface BookingModalProps {
   classItem: ClassItem;
@@ -118,7 +121,10 @@ const BookingModal: React.FC<BookingModalProps> = ({ classItem, onClose }) => {
             <div className="mb-4 text-sm text-gray-600">
               <p>Class Details:</p>
               <p>Date: {format(new Date(classItem.start), 'MM/dd/yyyy')}</p>
-              <p>Time: {format(new Date(classItem.start), 'h:mm a')}</p>
+              <p>
+                Time: {format(new Date(classItem.start), 'h:mm a')} -{' '}
+                {format(new Date(classItem.end), 'h:mm a')}
+              </p>
               <p>Instructor: {classItem.instructor}</p>
               <p>Room: {classItem.room}</p>
             </div>
@@ -174,28 +180,48 @@ const ClassSchedule: React.FC = () => {
 
   useEffect(() => {
     const fetchClasses = async () => {
-      try {
-        const classesRef = collection(db, 'classes');
-        const snapshot = await getDocs(classesRef);
-        const fetchedClasses: ClassItem[] = snapshot.docs.map((doc) => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            name: data.name,
-            instructor: data.instructor,
-            start: data.start,
-            end: data.end,
-            room: data.room,
-            capacity: data.capacity,
-          };
-        });
-        setClasses(fetchedClasses);
-      } catch (error) {
-        console.error('Error fetching classes:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  try {
+    const classesRef = collection(db, 'classes');
+    console.log('Fetching classes...');
+    const snapshot = await getDocs(classesRef);
+    console.log('Raw data:', snapshot.docs.map(doc => doc.data()));
+    
+    const fetchedClasses: ClassItem[] = snapshot.docs.map((doc) => {
+      const data = doc.data();
+      console.log('Processing class:', data);
+      
+      // Create a proper Date object by combining date and time
+      const [year, month, day] = data.date.split('-');
+      const [hours, minutes] = data.time.split(':');
+      
+      const startDate = new Date(year, parseInt(month) - 1, parseInt(day), parseInt(hours), parseInt(minutes));
+      const endDate = new Date(startDate);
+      endDate.setHours(endDate.getHours() + 1); // Assuming 1-hour classes
+
+      return {
+        id: doc.id,
+        name: data.name,
+        instructor: data.instructor,
+        date: data.date,
+        time: data.time,
+        room: data.room,
+        capacity: data.capacity,
+        description: data.description,
+        locationId: data.locationId || '',
+        start: startDate.toISOString(),
+        end: endDate.toISOString()
+      };
+    });
+
+    console.log('Processed classes:', fetchedClasses);
+    setClasses(fetchedClasses);
+  } catch (error) {
+    console.error('Error fetching classes:', error);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
     fetchClasses();
   }, []);
@@ -208,14 +234,19 @@ const ClassSchedule: React.FC = () => {
       const weekDays = eachDayOfInterval({ start: currentWeekStart, end: weekEnd });
       const thirtyDaysFromNow = addDays(new Date(), 30);
 
+      // Organize this week's classes by day
       const thisWeek: { [key: string]: ClassItem[] } = {};
       weekDays.forEach((day) => {
         const dayKey = format(day, 'yyyy-MM-dd');
         thisWeek[dayKey] = classes
           .filter((classItem) => isSameDay(new Date(classItem.start), day))
-          .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime());
+          .sort(
+            (a, b) =>
+              new Date(a.start).getTime() - new Date(b.start).getTime()
+          );
       });
 
+      // Get upcoming classes for the next 30 days
       const upcoming = classes
         .filter((classItem) => {
           const classStart = new Date(classItem.start);
@@ -224,7 +255,10 @@ const ClassSchedule: React.FC = () => {
             isBefore(classStart, thirtyDaysFromNow)
           );
         })
-        .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime());
+        .sort(
+          (a, b) =>
+            new Date(a.start).getTime() - new Date(b.start).getTime()
+        );
 
       setThisWeekClasses(thisWeek);
       setUpcomingClasses(upcoming);
@@ -261,17 +295,28 @@ const ClassSchedule: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-      <h2 className="text-3xl font-extrabold text-gray-900 mb-8">Class Schedule</h2>
+      <h2 className="text-3xl font-extrabold text-gray-900 mb-8">
+        Class Schedule
+      </h2>
 
       <div className="flex items-center justify-between mb-6">
-        <button onClick={goToPreviousWeek} className="p-2 rounded-full hover:bg-gray-100">
+        <button
+          onClick={goToPreviousWeek}
+          className="p-2 rounded-full hover:bg-gray-100"
+        >
           <ChevronLeft className="w-6 h-6" />
         </button>
         <h3 className="text-2xl font-bold">
           {format(currentWeekStart, 'MMMM d')} -{' '}
-          {format(endOfWeek(currentWeekStart, { weekStartsOn: 1 }), 'MMMM d, yyyy')}
+          {format(
+            endOfWeek(currentWeekStart, { weekStartsOn: 1 }),
+            'MMMM d, yyyy'
+          )}
         </h3>
-        <button onClick={goToNextWeek} className="p-2 rounded-full hover:bg-gray-100">
+        <button
+          onClick={goToNextWeek}
+          className="p-2 rounded-full hover:bg-gray-100"
+        >
           <ChevronRight className="w-6 h-6" />
         </button>
       </div>
@@ -290,8 +335,13 @@ const ClassSchedule: React.FC = () => {
               <div className="space-y-4 bg-white rounded-lg p-4 flex-grow">
                 {dayClasses.length > 0 ? (
                   dayClasses.map((classItem) => (
-                    <div key={classItem.id} className="bg-white shadow-sm rounded-lg p-4">
-                      <h5 className="font-semibold text-indigo-600">{classItem.name}</h5>
+                    <div
+                      key={classItem.id}
+                      className="bg-white shadow-sm rounded-lg p-4"
+                    >
+                      <h5 className="font-semibold text-indigo-600">
+                        {classItem.name}
+                      </h5>
                       <div className="text-sm space-y-1 mt-2">
                         <div className="flex items-center text-gray-600">
                           <Clock className="w-4 h-4 mr-2" />
@@ -316,7 +366,9 @@ const ClassSchedule: React.FC = () => {
                     </div>
                   ))
                 ) : (
-                  <p className="text-gray-500 text-sm py-2">No classes scheduled</p>
+                  <p className="text-gray-500 text-sm py-2">
+                    No classes scheduled
+                  </p>
                 )}
               </div>
             </div>
@@ -341,66 +393,66 @@ const ClassSchedule: React.FC = () => {
             </>
           )}
         </button>
-  {showUpcomingClasses && (
-    <div className="space-y-4">
-      {upcomingClasses.map((classItem) => (
-        <div
-          key={classItem.id}
-          className="bg-white shadow-sm rounded-lg p-4"
-        >
-          <div className="flex justify-between items-start">
-            <div>
-              <h5 className="font-semibold text-indigo-600">
-                {classItem.name}
-              </h5>
-              <p className="text-sm text-gray-500 mt-1">
-                {format(new Date(classItem.start), 'EEEE, MMMM d')}
-              </p>
-              <div className="text-sm space-y-1 mt-2">
-                <div className="flex items-center text-gray-600">
-                  <Clock className="w-4 h-4 mr-2" />
-                  {format(new Date(classItem.start), 'h:mm a')} -{' '}
-                  {format(new Date(classItem.end), 'h:mm a')}
-                </div>
-                <div className="flex items-center text-gray-600">
-                  <User className="w-4 h-4 mr-2" />
-                  {classItem.instructor}
-                </div>
-                <div className="flex items-center text-gray-600">
-                  <MapPin className="w-4 h-4 mr-2" />
-                  {classItem.room}
+        {showUpcomingClasses && (
+          <div className="space-y-4">
+            {upcomingClasses.map((classItem) => (
+              <div
+                key={classItem.id}
+                className="bg-white shadow-sm rounded-lg p-4"
+              >
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h5 className="font-semibold text-indigo-600">
+                      {classItem.name}
+                    </h5>
+                    <p className="text-sm text-gray-500 mt-1">
+                      {format(new Date(classItem.start), 'EEEE, MMMM d')}
+                    </p>
+                    <div className="text-sm space-y-1 mt-2">
+                      <div className="flex items-center text-gray-600">
+                        <Clock className="w-4 h-4 mr-2" />
+                        {format(new Date(classItem.start), 'h:mm a')} -{' '}
+                        {format(new Date(classItem.end), 'h:mm a')}
+                      </div>
+                      <div className="flex items-center text-gray-600">
+                        <User className="w-4 h-4 mr-2" />
+                        {classItem.instructor}
+                      </div>
+                      <div className="flex items-center text-gray-600">
+                        <MapPin className="w-4 h-4 mr-2" />
+                        {classItem.room}
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handleBookNow(classItem)}
+                    className="bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 transition duration-200"
+                  >
+                    Book Now
+                  </button>
                 </div>
               </div>
-            </div>
-            <button
-              onClick={() => handleBookNow(classItem)}
-              className="bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700 transition duration-200"
-            >
-              Book Now
-            </button>
+            ))}
+            {upcomingClasses.length === 0 && (
+              <p className="text-center text-gray-500">
+                No upcoming classes scheduled
+              </p>
+            )}
           </div>
-        </div>
-      ))}
-      {upcomingClasses.length === 0 && (
-        <p className="text-center text-gray-500">
-          No upcoming classes scheduled
-        </p>
+        )}
+      </div>
+
+      {showBookingModal && selectedClass && (
+        <BookingModal
+          classItem={selectedClass}
+          onClose={() => {
+            setShowBookingModal(false);
+            setSelectedClass(null);
+          }}
+        />
       )}
     </div>
-  )}
-</div>
-
-{showBookingModal && selectedClass && (
-  <BookingModal
-    classItem={selectedClass}
-    onClose={() => {
-      setShowBookingModal(false);
-      setSelectedClass(null);
-    }}
-  />
-)}
-</div>
-);
+  );
 };
 
 export default ClassSchedule;
