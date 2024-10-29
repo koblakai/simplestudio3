@@ -36,6 +36,16 @@ interface ClassItem {
   locationId?: string;
 }
 
+const getClassDateTime = (classItem: ClassItem) => {
+  const [year, month, day] = classItem.date.split('-').map(Number);
+  const [hours, minutes] = classItem.time.split(':').map(Number);
+  return new Date(year, month - 1, day, hours, minutes);
+};
+
+const getClassEndTime = (classItem: ClassItem) => {
+  const startTime = getClassDateTime(classItem);
+  return new Date(startTime.getTime() + 60 * 60 * 1000); // Add 1 hour
+};
 
 interface BookingModalProps {
   classItem: ClassItem;
@@ -74,7 +84,8 @@ const BookingModal: React.FC<BookingModalProps> = ({ classItem, onClose }) => {
         memberId: memberDoc.id,
         email,
         className: classItem.name,
-        date: classItem.start,
+        date: classItem.date,
+        time: classItem.time,
         instructor: classItem.instructor,
         room: classItem.room,
         bookedAt: new Date().toISOString(),
@@ -120,10 +131,10 @@ const BookingModal: React.FC<BookingModalProps> = ({ classItem, onClose }) => {
 
             <div className="mb-4 text-sm text-gray-600">
               <p>Class Details:</p>
-              <p>Date: {format(new Date(classItem.start), 'MM/dd/yyyy')}</p>
+              <p>Date: {format(getClassDateTime(classItem), 'MM/dd/yyyy')}</p>
               <p>
-                Time: {format(new Date(classItem.start), 'h:mm a')} -{' '}
-                {format(new Date(classItem.end), 'h:mm a')}
+                Time: {format(getClassDateTime(classItem), 'h:mm a')} -{' '}
+                {format(getClassEndTime(classItem), 'h:mm a')}
               </p>
               <p>Instructor: {classItem.instructor}</p>
               <p>Room: {classItem.room}</p>
@@ -180,48 +191,32 @@ const ClassSchedule: React.FC = () => {
 
   useEffect(() => {
     const fetchClasses = async () => {
-  try {
-    const classesRef = collection(db, 'classes');
-    console.log('Fetching classes...');
-    const snapshot = await getDocs(classesRef);
-    console.log('Raw data:', snapshot.docs.map(doc => doc.data()));
-    
-    const fetchedClasses: ClassItem[] = snapshot.docs.map((doc) => {
-      const data = doc.data();
-      console.log('Processing class:', data);
-      
-      // Create a proper Date object by combining date and time
-      const [year, month, day] = data.date.split('-');
-      const [hours, minutes] = data.time.split(':');
-      
-      const startDate = new Date(year, parseInt(month) - 1, parseInt(day), parseInt(hours), parseInt(minutes));
-      const endDate = new Date(startDate);
-      endDate.setHours(endDate.getHours() + 1); // Assuming 1-hour classes
+      try {
+        const classesRef = collection(db, 'classes');
+        const snapshot = await getDocs(classesRef);
 
-      return {
-        id: doc.id,
-        name: data.name,
-        instructor: data.instructor,
-        date: data.date,
-        time: data.time,
-        room: data.room,
-        capacity: data.capacity,
-        description: data.description,
-        locationId: data.locationId || '',
-        start: startDate.toISOString(),
-        end: endDate.toISOString()
-      };
-    });
+        const fetchedClasses: ClassItem[] = snapshot.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            name: data.name,
+            instructor: data.instructor,
+            date: data.date,
+            time: data.time,
+            room: data.room,
+            capacity: data.capacity,
+            description: data.description,
+            locationId: data.locationId || '',
+          };
+        });
 
-    console.log('Processed classes:', fetchedClasses);
-    setClasses(fetchedClasses);
-  } catch (error) {
-    console.error('Error fetching classes:', error);
-  } finally {
-    setLoading(false);
-  }
-};
-
+        setClasses(fetchedClasses);
+      } catch (error) {
+        console.error('Error fetching classes:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
     fetchClasses();
   }, []);
@@ -234,31 +229,34 @@ const ClassSchedule: React.FC = () => {
       const weekDays = eachDayOfInterval({ start: currentWeekStart, end: weekEnd });
       const thirtyDaysFromNow = addDays(new Date(), 30);
 
-      // Organize this week's classes by day
       const thisWeek: { [key: string]: ClassItem[] } = {};
       weekDays.forEach((day) => {
         const dayKey = format(day, 'yyyy-MM-dd');
         thisWeek[dayKey] = classes
-          .filter((classItem) => isSameDay(new Date(classItem.start), day))
-          .sort(
-            (a, b) =>
-              new Date(a.start).getTime() - new Date(b.start).getTime()
-          );
+          .filter((classItem) => {
+            const classDate = getClassDateTime(classItem);
+            return isSameDay(classDate, day);
+          })
+          .sort((a, b) => {
+            const aDate = getClassDateTime(a);
+            const bDate = getClassDateTime(b);
+            return aDate.getTime() - bDate.getTime();
+          });
       });
 
-      // Get upcoming classes for the next 30 days
       const upcoming = classes
         .filter((classItem) => {
-          const classStart = new Date(classItem.start);
+          const classDate = getClassDateTime(classItem);
           return (
-            isAfter(classStart, weekEnd) &&
-            isBefore(classStart, thirtyDaysFromNow)
+            isAfter(classDate, weekEnd) &&
+            isBefore(classDate, thirtyDaysFromNow)
           );
         })
-        .sort(
-          (a, b) =>
-            new Date(a.start).getTime() - new Date(b.start).getTime()
-        );
+        .sort((a, b) => {
+          const aDate = getClassDateTime(a);
+          const bDate = getClassDateTime(b);
+          return aDate.getTime() - bDate.getTime();
+        });
 
       setThisWeekClasses(thisWeek);
       setUpcomingClasses(upcoming);
@@ -345,8 +343,8 @@ const ClassSchedule: React.FC = () => {
                       <div className="text-sm space-y-1 mt-2">
                         <div className="flex items-center text-gray-600">
                           <Clock className="w-4 h-4 mr-2" />
-                          {format(new Date(classItem.start), 'h:mm a')} -{' '}
-                          {format(new Date(classItem.end), 'h:mm a')}
+                          {format(getClassDateTime(classItem), 'h:mm a')} -{' '}
+                          {format(getClassEndTime(classItem), 'h:mm a')}
                         </div>
                         <div className="flex items-center text-gray-600">
                           <User className="w-4 h-4 mr-2" />
@@ -406,13 +404,13 @@ const ClassSchedule: React.FC = () => {
                       {classItem.name}
                     </h5>
                     <p className="text-sm text-gray-500 mt-1">
-                      {format(new Date(classItem.start), 'EEEE, MMMM d')}
+                      {format(getClassDateTime(classItem), 'EEEE, MMMM d')}
                     </p>
                     <div className="text-sm space-y-1 mt-2">
                       <div className="flex items-center text-gray-600">
                         <Clock className="w-4 h-4 mr-2" />
-                        {format(new Date(classItem.start), 'h:mm a')} -{' '}
-                        {format(new Date(classItem.end), 'h:mm a')}
+                        {format(getClassDateTime(classItem), 'h:mm a')} -{' '}
+                        {format(getClassEndTime(classItem), 'h:mm a')}
                       </div>
                       <div className="flex items-center text-gray-600">
                         <User className="w-4 h-4 mr-2" />
